@@ -23,4 +23,23 @@ class GameCoreAPI extends PluginBase {
     const VERSION = '1.0.0';
     
     private $ChatChannel = [];
+    
+    private static $instance;
+
+    public function onEnable() {
+        $this->initPlugin();
+        $this->getLogger()->notice(TF::GOLD."小游戏框架已启动!");
+    }
+
+    public function onLoad() {
+        self::$instance = $this;
+    }
+
+    private function initPlugin() {
+        //TODO
+    }
+
+    public static function getInstance() {
+        return self::$instance;
+    }
 }
