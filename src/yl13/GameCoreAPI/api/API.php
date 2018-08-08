@@ -13,6 +13,8 @@
 
 namespace yl13\GameCoreAPI\api;
 
+use pocketmine\utils\TextFormat as TF;
+
 use yl13\GameCoreAPI\GameCoreAPI;
 use yl13\GameCoreAPI\utils;
 
@@ -26,7 +28,6 @@ class API {
     public function __construct(GameCoreAPI $plugin, int $gamecoreid, int $chatchannelid) {
         $this->plugin = $plugin;
         $this->gamecore = new GameCore($plugin, $gamecoreid);
-        $this->chatchannel = new ChatChannel($plugin, $chatchannelid);
-        $this->plugin->getLogger()->notice(TF::GREEN."API初始化完成");
+        //$this->chatchannel = new ChatChannel($plugin, $chatchannelid);
     }
 }

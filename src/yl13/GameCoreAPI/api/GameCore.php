@@ -13,6 +13,8 @@
 
 namespace yl13\GameCoreAPI\api;
 
+use pocketmine\utils\TextFormat as TF;
+
 use yl13\GameCoreAPI\GameCoreAPI;
 use yl13\GameCoreAPI\utils;
 
@@ -30,62 +32,50 @@ class GameCore {
         $this->id = $id;
     }
 
-    /**
-     * 
-     * API
-     * 
-     * 
-     */
+    //getVersion
+    public function getVersion() : String {
+        /**
+         * 获取GameCoreAPI的版本
+         * 返回值: String
+         */
+        return $this->plugin->get($this->id, "GAMECORE_VERSION");
+    }
 
-    /**
-     * getGameCoreVersion
-     * 获取GameCore的版本
-     * 返回值: String
-     */
-        public function getGameCoreVersion() : String {
-            return $this->plugin->get($this->id, "GAMECORE_VERSION");
-        }
-    
-    /**
-     * getGameCoreAPIVersion
-     * 获取GameCore的API版本
-     * 返回值: String
-     */
-        public function getGameCoreAPIVersion() : String {
-            return $this->plugin->get($this->id, "API_VERSION");
-        }
-    
-    /**
-     * registerGame
-     * 注册小游戏来获取小游戏id,从而来使用小游戏框架的API
-     * 需要: 小游戏名(String)
-     * 可用: 作者名(String)
-     * 返回值: int
-     */
-        public function registerGame(String $gamename, String $authorname = "unknown") : ?int {
-            $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
-            if(!utils::deep_in_array($gamename, $registeredGame)) {
-                $id = utils::generateId(6);
-                while(utils::deep_in_array($id, $registeredGame)) {
-                    $id = utils::generateId(6);
-                }
-                $registeredGame[$id] = array(
-                    "name" => $gamename,
-                    "id" => $id,
-                    "author" => $authorname
-                );
-                $this->plugin->override($this->id, "REGISTERED_GAME", $registeredGame);
-                if($authorname == "unknown") {
-                    $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册成功");
-                }
-                else {
-                    $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册成功,作者:".TF::WHITE.$authorname);
-                }
-                return $id;
+    //getApiVersion
+    public function getApiVersion() : String {
+        /**
+         * 获取GameCoreAPI的api版本
+         * 返回值: String
+         */
+        return $this->plugin->get($this->id, "API_VERSION");
+    }
+
+    //registerGame
+    public function registerGame(String $gamename, String $authorname = "unknown") : ?int {
+        /**
+         * 注册小游戏
+         * 以获取小游戏id来使用GameCoreAPI
+         */
+        $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
+        if(!utils::deep_in_array($gamename, $registeredGame)) {
+            $id = utils::generateId(8);
+            while(utils::deep_in_array($id, $registeredGame)) {
+                $id = utils::generateId(8);
             }
-            else {
-                $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册失败,原因:".TF::WHITE.$failedreason['gamename.already.existed']);
-                return false;
+            $registeredGame[$id] = array(
+                "name" => $gamename,
+                "id" => $id,
+                "author" => $authorname
+            );
+            $this->plugin->override($this->id, "REGISTERED_GAME", $registeredGame);
+            if($authorname == "unknown") {
+                $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册成功");
+            } else {
+                $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册成功,作者:".TF::WHITE.$authorname);
             }
+            return $id;
         }
+        $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册失败,原因:".TF::WHITE.$this->failedreason['gamename.already.existed']);
+        return false;
+    }
 }

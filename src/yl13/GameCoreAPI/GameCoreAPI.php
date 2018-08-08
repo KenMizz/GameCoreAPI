@@ -52,19 +52,19 @@ class GameCoreAPI extends PluginBase {
     }
 
     private function initPlugin() {
-        $this->getLogger()->notice(TF::GREEN."初始化小游戏框架中...");
-        for($i = 0;$i == 1; $i++) {
-            $this->ids[$i] = utils::generateId(4);
-        }
-        $this->api = new API($this, $ids[0], $ids[1]);
-        if(!is_folder($this->getDataFolder())) {
+        $this->getLogger()->notice(TF::GREEN."初始化GameCoreAPI中...");
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+        $this->ids[0] = utils::generateId(4);
+        $this->ids[1] = utils::generateId(4);
+        $this->api = new API($this, $this->ids[0], $this->ids[1]);
+        if(!is_dir($this->getDataFolder())) {
             @mkdir($this->getDataFolder());
         }
         if(!is_file($this->getDataFolder()."config.yml")) {
             $this->saveDefaultConfig();
-            $config = $this->getConfigs("config");
-            $this->initConfig($config);
         }
+        $config = $this->getConfigs("config");
+        $this->initConfig($config);
     }
 
     private function initConfig(Config $config) {
@@ -76,6 +76,9 @@ class GameCoreAPI extends PluginBase {
         if(!is_string($defaultchatchannel)) {
             $defaultchatchannel = "lobby";
         }
+        $this->settings["chatchannel-enabled"] = $chatchannelenabled;
+        $this->settings["defaultchatchannel"] = $defaultchatchannel;
+        $this->getLogger()->notice(TF::GREEN."GameCoreAPI初始化成功");
     }
 
     public function get(int $id, String $type) {
@@ -92,11 +95,36 @@ class GameCoreAPI extends PluginBase {
 
                 case 'REGISTERED_GAME':
                     return $this->registeredGame;
+                break;
+                
+                case 'SETTINGS':
+                    return $this->settings;
             }
         }
+        return false;
+    }
+
+    public function override(int $id, String $type, $override) {
+        if(utils::deep_in_array($id, $this->ids)) {
+            switch($type) {
+
+                case 'REGISTERED_GAME':
+                    $this->registeredGame = $override;
+                break;
+            }
+        }
+        return false;
     }
 
     private function getConfigs(String $name, $type = Config::YAML) {
-        return new Config($this->getDataFolder()."{$name}.yml", $type);
+        switch($type) {
+
+            case Config::YAML:
+                if(!is_file($this->getDataFolder()."{$name}.yml")) {
+                    return new Config($this->getDataFolder()."{$name}.yml", Config::YAML, array());
+                }
+                return new Config($this->getDataFolder()."{$name}.yml", Config::YAML);
+            
+        }
     } 
 }

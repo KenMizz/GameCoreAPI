@@ -23,7 +23,22 @@ class utils {
         return (int)$id;
     }
 
+    //from(https://blog.csdn.net/wy377383795/article/details/78901146)
     public static function deep_in_array($value, Array $array) : bool {
-        //TODO
+        foreach($array as $item) {
+            if(!is_array($item)) {
+                if($value == $item) {
+                    return true;
+                } else {
+                    continue;
+                }
+            }
+            if(in_array($value, $item)) {
+                return true;
+            } else if($this->deep_in_array($value, $item)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
