@@ -31,17 +31,24 @@ class GameCoreAPI extends PluginBase {
     ];
     
     private $ChatChannel = [];
-<<<<<<< HEAD
     private $registeredGame = [];
     public $api;
-=======
->>>>>>> 6f2fd704ee163af3414b6dd79d9b6a4b0d3df188
     
     private static $instance;
 
     public function onEnable() {
         $this->initPlugin();
-<<<<<<< HEAD
+    }
+
+    public function onLoad() {
+        self::$instance = $this;
+    }
+
+    public static function getInstance() {
+        /**
+         * 获取GameCore的Instance来使用GameCoreAPI
+         */
+        return self::$instance;
     }
 
     private function initPlugin() {
@@ -92,20 +99,4 @@ class GameCoreAPI extends PluginBase {
     private function getConfigs(String $name, $type = Config::YAML) {
         return new Config($this->getDataFolder()."{$name}.yml", $type);
     } 
-=======
-        $this->getLogger()->notice(TF::GOLD."小游戏框架已启动!");
-    }
-
-    public function onLoad() {
-        self::$instance = $this;
-    }
-
-    private function initPlugin() {
-        //TODO
-    }
-
-    public static function getInstance() {
-        return self::$instance;
-    }
->>>>>>> 6f2fd704ee163af3414b6dd79d9b6a4b0d3df188
 }
