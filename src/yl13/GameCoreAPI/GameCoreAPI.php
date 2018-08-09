@@ -73,16 +73,13 @@ class GameCoreAPI extends PluginBase {
         if(!is_bool($chatchannelenabled)) {
             $chatchannelenabled = true;
         }
-        if(!is_string($defaultchatchannel)) {
-            $defaultchatchannel = "lobby";
-        }
         $this->settings["chatchannel-enabled"] = $chatchannelenabled;
         $this->settings["defaultchatchannel"] = $defaultchatchannel;
         $this->getLogger()->notice(TF::GREEN."GameCoreAPI初始化成功");
     }
 
     public function get(int $id, String $type) {
-        if(utils::deep_in_array($id, $ids)) {
+        if(utils::deep_in_array($id, $this->ids)) {
             switch($type) {
 
                 case 'GAMECORE_VERSION':
