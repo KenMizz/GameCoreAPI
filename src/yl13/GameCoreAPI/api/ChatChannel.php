@@ -115,6 +115,40 @@ class ChatChannel {
         }
     }
 
+    //removePlayer
+    public function removePlayer(int $gameid, String $chatchannelname, Array $players) {
+        /**
+         * 移除玩家从指定的聊天频道
+         * 需要:小游戏id(int) 聊天频道名(String) 玩家名(Array)
+         * 注:玩家名不强制大小写
+         */
+        $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
+        $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
+        if(utils::deep_in_array($gameid, $registeredGame)) {
+            $gamename = $this->plugin->getGameNameById($this->id, $gameid);
+            if(utils::deep_in_array($chatchannelname, $chatchannel)) {
+                $id = $chatchannel[$chatchannelname]['id'];
+                if($id == $gameid) {
+                    $players = $chatchannel[$chatchannelname]['players'];
+                    foreach($players as $p) {
+                        $Player = $this->plugin->getServer()->getPlayerExact($p);
+                        if($Player) {
+                            if(utils::deep_in_array($Player->getName(), $players)) {
+                                unset($players[$Player->getName()]);
+                            }
+                        }
+                    }
+                    $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
+                    $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 移除玩家从聊天频道".TF::WHITE.$chatchannelname.TF::AQUA."成功");
+                } else {
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$gamename.TF::RED." 移除玩家从聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['chatchannel.not.created.by.this.game']);
+                }
+            } else {
+                $this->plugin->getLogger()->warning("小游戏ID:".TF::WHITE.$gameid.TF::RED."移除玩家从聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
+            }
+        }
+    }
+
     //createDefaultChatChannel
     public function createDefaultChatChannel(int $gid, String $name) {
         if($this->gid = $gid) {
