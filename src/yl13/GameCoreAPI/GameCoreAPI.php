@@ -25,13 +25,15 @@ class GameCoreAPI extends PluginBase {
     const API_VERSION = "v1";
 
     private $ids = [];
+    private $gid;
     private $settings = [
         "chatchannel-enabled" => true,
-        "default-channel" => "lobby"
+        "default-chatchannel" => "lobby"
     ];
     
     private $ChatChannel = [];
     private $registeredGame = [];
+    private $playerdata = [];
     public $api;
     
     private static $instance;
@@ -56,7 +58,8 @@ class GameCoreAPI extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->ids[0] = utils::generateId(4);
         $this->ids[1] = utils::generateId(4);
-        $this->api = new API($this, $this->ids[0], $this->ids[1]);
+        $this->gid = utils::generateId(8);
+        $this->api = new API($this, $this->ids[0], array($this->ids[1], $this->gid);
         if(!is_dir($this->getDataFolder())) {
             @mkdir($this->getDataFolder());
         }
@@ -75,6 +78,11 @@ class GameCoreAPI extends PluginBase {
         }
         $this->settings["chatchannel-enabled"] = $chatchannelenabled;
         $this->settings["defaultchatchannel"] = $defaultchatchannel;
+        if($this->settings['chatchannel-enabled']) {
+            if(is_string($this->settings['defaultchatchannel'])) {
+              $this->api->chatchannel->createDefaultChatChannel($this->gid, $this->settings['defaultchatchannel']);
+            }
+        }
         $this->getLogger()->notice(TF::GREEN."GameCoreAPI初始化成功");
     }
 
@@ -93,6 +101,10 @@ class GameCoreAPI extends PluginBase {
                 case 'REGISTERED_GAME':
                     return $this->registeredGame;
                 break;
+
+                case 'CHATCHANNEL':
+                    return $this->ChatChannel;
+                break;
                 
                 case 'SETTINGS':
                     return $this->settings;
@@ -108,9 +120,22 @@ class GameCoreAPI extends PluginBase {
                 case 'REGISTERED_GAME':
                     $this->registeredGame = $override;
                 break;
+
+                case 'CHATCHANNEL':
+                    $this->ChatChannel = $override;
             }
         }
         return false;
+    }
+
+    public function getGameNameById(int $id, int $gameid) String {
+        if(utils::deep_in_array($id, $this->ids)) {
+            if(utils::deep_in_array($gameid, $this->registeredGame)) {
+                return $this->registeredGame[$gameid]['name'];
+            }
+            return '未知';
+        }
+        return '未知';
     }
 
     private function getConfigs(String $name, $type = Config::YAML) {
@@ -123,5 +148,17 @@ class GameCoreAPI extends PluginBase {
                 return new Config($this->getDataFolder()."{$name}.yml", Config::YAML);
             
         }
-    } 
+    }
+
+    public function initPlayerData(EventListener $Listener, Player $player) {
+        $pname = $player->getName();
+        $playerchatchannel = null;
+        if(is_string($this->settings['default-chatchannel'])) {
+            $this->api->chatchannel->addPlayerToDefaultChatChannel($this->gid, array($pname));
+            $playerchatchannel = $this->settings['default-chatchannel'];
+        }
+        $this->playerdata[$pname] = array(
+            'chatchannel' => $playerchatchannel
+        );
+    }
 }

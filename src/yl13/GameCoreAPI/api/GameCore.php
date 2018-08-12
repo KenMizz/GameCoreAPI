@@ -69,13 +69,13 @@ class GameCore {
             );
             $this->plugin->override($this->id, "REGISTERED_GAME", $registeredGame);
             if($authorname == "unknown") {
-                $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册成功");
+                $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$gamename.TF::GREEN." 注册成功");
             } else {
-                $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册成功,作者:".TF::WHITE.$authorname);
+                $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$gamename.TF::GREEN." 注册成功,作者:".TF::WHITE.$authorname);
             }
             return $id;
         }
-        $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 注册失败,原因:".TF::WHITE.$this->failedreason['gamename.already.existed']);
+        $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$gamename.TF::RED." 注册失败,原因:".TF::WHITE.$this->failedreason['gamename.already.existed']);
         return false;
     }
 }
