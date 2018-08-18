@@ -128,7 +128,7 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
-    public function getGameNameById(int $id, int $gameid) String {
+    public function getGameNameById(int $id, int $gameid) : String {
         if(utils::deep_in_array($id, $this->ids)) {
             if(utils::deep_in_array($gameid, $this->registeredGame)) {
                 return $this->registeredGame[$gameid]['name'];

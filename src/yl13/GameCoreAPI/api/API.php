@@ -25,9 +25,9 @@ class API {
     public $gamecore;
     public $chatchannel;
 
-    public function __construct(GameCoreAPI $plugin, int $gamecoreid, Array $chatchannel) {
+    public function __construct(GameCoreAPI $plugin, int $gamecoreid, array $chchannel) {
         $this->plugin = $plugin;
         $this->gamecore = new GameCore($plugin, $gamecoreid);
-        $this->chatchannel = new ChatChannel($plugin, $chatchannel[0], $chatchannel[1]);
+        $this->chatchannel = new ChatChannel($plugin, $chchannel[0], $chchannel[1]);
     }
 }
