@@ -150,15 +150,15 @@ class GameCoreAPI extends PluginBase {
         }
     }
 
-    public function initPlayerData(EventListener $Listener, Player $player) {
-        $pname = $player->getName();
-        $playerchatchannel = null;
-        if(is_string($this->settings['default-chatchannel'])) {
-            $this->api->chatchannel->addPlayerToDefaultChatChannel($this->gid, array($pname));
-            $playerchatchannel = $this->settings['default-chatchannel'];
-        }
-        $this->playerdata[$pname] = array(
-            'chatchannel' => $playerchatchannel
-        );
+    public function initPlayerData(int $gid, Player $player) {
+        //TODO
+    }
+
+    public function setPlayerData(int $gid, Player $player, String $type) {
+        //TODO
+    }
+
+    public function removePlayerData(int $gid, Player $player) {
+        //TODO
     }
 }
