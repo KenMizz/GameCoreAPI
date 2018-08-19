@@ -14,7 +14,7 @@
 namespace yl13\GameCoreAPI;
 
 use pocketmine\event\Listener;
-use pocketmine\event\player\{PlayerJoinEvent, PlayerQuitEvent};
+use pocketmine\event\player\{PlayerJoinEvent, PlayerQuitEvent, PlayerChatEvent};
 
 use yl13\GameCoreAPI\GameCoreAPI;
 
@@ -22,18 +22,24 @@ use yl13\GameCoreAPI\GameCoreAPI;
 class EventListener implements Listener {
 
     private $plugin;
+    private $gid;
 
-    public function __construct(GameCoreAPI $plugin) {
+    public function __construct(GameCoreAPI $plugin, int $gid) {
         $this->plugin = $plugin;
+        $this->gid = $gid;
     }
 
     public function onJoin(PlayerJoinEvent $ev) {
         $Player = $ev->getPlayer();
-        $this->plugin->initPlayerData($this, $Player->getName());
+        $this->plugin->initPlayerData($this, $Player);
     }
 
     public function onQuit(PlayerQuitEvent $ev) {
         $Player = $ev->getPlayer();
         $this->plugin->removePlayerData($this, $Player->getName());
+    }
+
+    public function onChat(PlayerChatEvent $ev) {
+        //TODO
     }
 }

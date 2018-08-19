@@ -30,6 +30,7 @@ class GameCoreAPI extends PluginBase {
         "chatchannel-enabled" => true,
         "default-chatchannel" => "lobby"
     ];
+    //private $debug = true;
     
     private $ChatChannel = [];
     private $registeredGame = [];
@@ -138,7 +139,7 @@ class GameCoreAPI extends PluginBase {
         return '未知';
     }
 
-    private function getConfigs(String $name, $type = Config::YAML) {
+    private function getConfigs(String $name, $type = Config::YAML) : Config {
         switch($type) {
 
             case Config::YAML:
@@ -150,15 +151,47 @@ class GameCoreAPI extends PluginBase {
         }
     }
 
-    public function initPlayerData(int $gid, Player $player) {
-        //TODO
+    public function initPlayerData(int $gid, Player $player) : bool {
+        if($gid == $this->gid) {
+            if(!utils::deep_in_array($player->getName(), $this->playerdata)) {
+                $this->playerdata[$player->getName()] = array(
+                    'chatchannel' => null
+                );
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
-    public function setPlayerData(int $gid, Player $player, String $type) {
-        //TODO
+    public function setPlayerData(int $gid, Player $player, String $type, $data) : bool {
+        if($gid == $this->gid) {
+            if(utils::deep_in_array($player->getName(), $this->playerdata)) {
+                switch($type) {
+
+                    default:
+                        return false;
+                    break;
+
+                    case 'chatchannel':
+                        $this->playerdata[$player->getName()]['chatchannel'] = $data;
+                        return true;
+                    break;
+                }
+            }
+            return false;
+        }
+        return false;
     }
 
-    public function removePlayerData(int $gid, Player $player) {
-        //TODO
+    public function removePlayerData(int $gid, String $PlayerName) : bool {
+        if($gid == $this->gid) {
+            if(utils::deep_in_array($PlayerName, $this->playerdata)) {
+                unset($this->playerdata[$PlayerName]);
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 }
