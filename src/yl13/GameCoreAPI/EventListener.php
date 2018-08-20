@@ -40,6 +40,6 @@ class EventListener implements Listener {
     }
 
     public function onChat(PlayerChatEvent $ev) {
-        //TODO
+        $Player = $ev->getPlayer();
     }
 }

@@ -182,7 +182,7 @@ class ChatChannel {
     }
 
     //createDefaultChatChannel
-    public function createDefaultChatChannel(int $gid, String $name) {
+    public function createDefaultChatChannel(int $gid, String $name) : bool {
         if($this->gid = $gid) {
             $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
             $chatchannel[$name] = array(
@@ -192,14 +192,19 @@ class ChatChannel {
             );
             $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
             $this->plugin->getLogger()->notice(TF::WHITE."默认聊天频道设置:{$name}");
+            return true;
         }
+        return false;
     }
 
     //addPlayerToDefaultChatChannel
     public function addPlayerToDefaultChatChannel(int $gid, Array $players) {
         if($this->gid = $gid) {
             $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
-            
+            $Settings = $this->plugin->get($this->id, "SETTINGS");
+            if(!$Settings['default-chatchannel'] == null) {
+                //TODO
+            }
         }
     }
 }
