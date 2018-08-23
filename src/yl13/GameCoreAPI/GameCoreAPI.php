@@ -60,7 +60,7 @@ class GameCoreAPI extends PluginBase {
         $this->ids[0] = utils::generateId(4);
         $this->ids[1] = utils::generateId(4);
         $this->gid = utils::generateId(8);
-        $this->api = new API($this, $this->ids[0], array($this->ids[1], $this->gid);
+        $this->api = new API($this, $this->id[0], $this->id[1], $this->gid);
         if(!is_dir($this->getDataFolder())) {
             @mkdir($this->getDataFolder());
         }

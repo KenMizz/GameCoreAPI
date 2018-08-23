@@ -109,7 +109,7 @@ class ChatChannel {
                 $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
                 $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 添加玩家至聊天频道".TF::WHITE.$chatchannelname.TF::AQUA."成功");
             } else {
-                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$gamename.TF::RED." 添加玩家至聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:"$this->failedreason['chatchannel.not.existed']);
+                $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::RED." 添加玩家至聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".$this->failedreason['chatchannel.not.existed']);
             }
         } else {
             $this->plugin->getLogger()->warning("小游戏ID:".TF::WHITE.$gameid.TF::RED."添加玩家至聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
@@ -143,10 +143,10 @@ class ChatChannel {
                     $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
                     $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 移除玩家至聊天频道".TF::WHITE.$chatchannelname.TF::AQUA."成功");
                 } else {
-                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$gamename.TF::RED." 移除玩家至聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:"$this->failedreason['chatchannel.not.created.by.this.game']);
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$gamename.TF::RED." 移除玩家至聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".$this->failedreason['chatchannel.not.created.by.this.game']);
                 }
             } else {
-                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$gamename.TF::RED." 移除玩家至聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:"$this->failedreason['chatchannel.not.existed']);
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$gamename.TF::RED." 移除玩家至聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".$this->failedreason['chatchannel.not.existed']);
             }
         } else {
             $this->plugin->getLogger()->warning("小游戏ID:".TF::WHITE.$gameid.TF::RED."移除玩家至聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
@@ -169,6 +169,7 @@ class ChatChannel {
                 $id = $chatchannel[$chatchannelname]['id'];
                 if($id == $gameid) {
                     $chatchannel[$chatchannelname]['format'] = $format;
+                    $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
                     $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 设置聊天频道".TF::WHITE.$chatchannelname.TF::AQUA."的聊天格式成功");
                 } else {
                     $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$gamename.TF::RED." 设置聊天频道".TF::WHITE.$chatchannelname.TF::RED."的聊天格式失败,原因:".TF::WHITE.$this->failedreason['chatchannel.not.created.by.this.game']);
@@ -178,6 +179,22 @@ class ChatChannel {
             }
         } else {
             $this->plugin->getLogger()->warning("小游戏ID:".TF::WHITE.$gameid.TF::RED."设置聊天频道".TF::WHITE.$chatchannelname.TF::RED."的聊天格式失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
+        }
+    }
+
+    //brocastMessage
+    public function brocastMessage(int $gameid, String $chatchannelname, String $message) {
+        /**
+         * 在指定的聊天频道输出全局信息
+         * 需要:小游戏id(int) 聊天频道名(String) 信息(String)
+         */
+        $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
+        $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
+        if(utils::deep_in_array($gameid, $registeredGame)) {
+            $gamename = $this->plugin->getGameNameById($gameid);
+            if(utils::deep_in_array($chatchannelname, $chatchannel)) {
+                //TODO
+            }
         }
     }
 
