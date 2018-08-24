@@ -193,8 +193,14 @@ class ChatChannel {
         if(utils::deep_in_array($gameid, $registeredGame)) {
             $gamename = $this->plugin->getGameNameById($gameid);
             if(utils::deep_in_array($chatchannelname, $chatchannel)) {
-                //TODO
+                $Player = $chatchannel[$chatchannelname]['players'];
+                $this->plugin->getServer()->broadcastMessage($message, $Player);
+                $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 向聊天频道".TF::WHITE.$chatchannelname.TF::AQUA."发送全局信息成功");
+            } else {
+                $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::RED." 向聊天频道".TF::WHITE.$chatchannelname.TF::RED."发送全局信息失败,原因:".TF::WHITE.$this->reason['chatchannel.not.existed']);
             }
+        } else {
+            $this->plugin->getLogger()->warning("小游戏ID:".TF::WHITE.$gameid.TF::RED."向聊天频道".TF::WHITE.$chatchannelname.TF::RED."发送全局信息失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
         }
     }
 
