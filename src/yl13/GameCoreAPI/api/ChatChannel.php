@@ -4,8 +4,7 @@ namespace yl13\GameCoreAPI\api;
 
 use pocketmine\utils\TextFormat as TF;
 
-use yl13\GameCoreAPI\GameCoreAPI;
-use yl13\GameCoreAPI\utils;
+use yl13\GameCoreAPI\{GameCoreAPI, utils};
 
 class ChatChannel {
 
@@ -106,6 +105,7 @@ class ChatChannel {
                         }
                     }
                 }
+                $chatchannel[$chatchannelname]['players'] = $players;
                 $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
                 $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 添加玩家至聊天频道".TF::WHITE.$chatchannelname.TF::AQUA."成功");
             } else {
@@ -140,6 +140,7 @@ class ChatChannel {
                             }
                         }
                     }
+                    $chatchannel[$chatchannelname]['players'] = $players;
                     $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
                     $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$gamename.TF::AQUA." 移除玩家至聊天频道".TF::WHITE.$chatchannelname.TF::AQUA."成功");
                 } else {
@@ -221,13 +222,27 @@ class ChatChannel {
     }
 
     //addPlayerToDefaultChatChannel
-    public function addPlayerToDefaultChatChannel(int $gid, Array $players) {
+    public function addPlayerToDefaultChatChannel(int $gid, Array $players) : bool {
         if($this->gid = $gid) {
             $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
             $Settings = $this->plugin->get($this->id, "SETTINGS");
             if(!$Settings['default-chatchannel'] == null) {
-                //TODO
+                $DefaultChatChannelName = $Settings['default-chatchannel'];
+                $ps = $chatchannel[$DefaultChatChannelName]['players'];
+                foreach($players as $p) {
+                    $Player = $this->plugin->getServer()->getPlayerExact($p);
+                    if($Player) {
+                        if(!utils::deeep_in_array($Player->getName(), $ps)) {
+                            $ps[$Player->getName()] = $Player;
+                        }
+                    }
+                }
+                $chatchannel[$chatchannelname]['players'] = $ps;
+                $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
+                return true;
             }
+            return false;
         }
+        return false;
     }
 }
