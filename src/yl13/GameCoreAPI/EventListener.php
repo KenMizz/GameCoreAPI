@@ -32,6 +32,10 @@ class EventListener implements Listener {
     public function onJoin(PlayerJoinEvent $ev) {
         $Player = $ev->getPlayer();
         $this->plugin->initPlayerData($this, $Player);
+        $Settings = $this->plugin->get($this->gid, "SETTINGS");
+        if($Settings['default-chatchannel'] != null) {
+            $this->plugin->setPlayerData($this->gid, $Player, "CHATCHANNEL", $Settings['default-chatchannel']);
+        }
     }
 
     public function onQuit(PlayerQuitEvent $ev) {
@@ -41,6 +45,18 @@ class EventListener implements Listener {
 
     public function onChat(PlayerChatEvent $ev) {
         $Player = $ev->getPlayer();
-        
+        $ChatChannelData = $this->plugin->getPlayerData($this->gid, $Player, "CHATCHANNEL");
+        if($ChatChannelData == null) {
+            $ev->setCancelled(true);
+        } else {
+            $chatchannel = $this->plugin->get($this->gid, "CHATCHANNEL");
+            if(!utils::deep_in_array($ChatChannelData, $chatchannel)) {
+                $ev->setCancelled(true);
+            } else {
+                $players = $chatchannel[$ChatChannelData]['players'];
+                $ev->setCancelled(true);
+                $this->plugin->getServer()->broadcastMessage($ev->getMessage(), $players);
+            }
+        }
     }
 }

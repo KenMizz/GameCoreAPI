@@ -33,7 +33,7 @@ class GameCore {
     }
 
     //getVersion
-    public function getVersion() : String {
+    public final function getVersion() : String {
         /**
          * 获取GameCoreAPI的版本
          * 返回值: String
@@ -42,7 +42,7 @@ class GameCore {
     }
 
     //getApiVersion
-    public function getApiVersion() : String {
+    public final function getApiVersion() : String {
         /**
          * 获取GameCoreAPI的api版本
          * 返回值: String
@@ -51,7 +51,7 @@ class GameCore {
     }
 
     //registerGame
-    public function registerGame(String $gamename, String $authorname = "unknown") : ?int {
+    public final function registerGame(String $gamename, String $authorname = "unknown") : ?int {
         /**
          * 注册小游戏
          * 以获取小游戏id来使用GameCoreAPI

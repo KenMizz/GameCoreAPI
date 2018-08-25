@@ -30,7 +30,6 @@ class GameCoreAPI extends PluginBase {
         "chatchannel-enabled" => true,
         "default-chatchannel" => "lobby"
     ];
-    //private $debug = true;
     
     private $ChatChannel = [];
     private $registeredGame = [];
@@ -87,8 +86,8 @@ class GameCoreAPI extends PluginBase {
         $this->getLogger()->notice(TF::GREEN."GameCoreAPI初始化成功");
     }
 
-    public function get(int $id, String $type) {
-        if(utils::deep_in_array($id, $this->ids)) {
+    public final function get(int $id, String $type) {
+        if(utils::deep_in_array($id, $this->ids) or utils::deep_in_array($id, $this->gid)) {
             switch($type) {
 
                 case 'GAMECORE_VERSION':
@@ -114,7 +113,7 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
-    public function override(int $id, String $type, $override) {
+    public final function override(int $id, String $type, $override) {
         if(utils::deep_in_array($id, $this->ids)) {
             switch($type) {
 
@@ -129,7 +128,7 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
-    public function getGameNameById(int $id, int $gameid) : String {
+    public final function getGameNameById(int $id, int $gameid) : String {
         if(utils::deep_in_array($id, $this->ids)) {
             if(utils::deep_in_array($gameid, $this->registeredGame)) {
                 return $this->registeredGame[$gameid]['name'];
@@ -139,7 +138,7 @@ class GameCoreAPI extends PluginBase {
         return '未知';
     }
 
-    private function getConfigs(String $name, $type = Config::YAML) : Config {
+    private final function getConfigs(String $name, $type = Config::YAML) : Config {
         switch($type) {
 
             case Config::YAML:
@@ -151,7 +150,7 @@ class GameCoreAPI extends PluginBase {
         }
     }
 
-    public function initPlayerData(int $gid, Player $player) : bool {
+    public final function initPlayerData(int $gid, Player $player) : bool {
         if($gid == $this->gid) {
             if(!utils::deep_in_array($player->getName(), $this->playerdata)) {
                 $this->playerdata[$player->getName()] = array(
@@ -164,7 +163,7 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
-    public function setPlayerData(int $gid, Player $player, String $type, $data) : bool {
+    public final function setPlayerData(int $gid, Player $player, String $type, $data) : ?bool {
         if($gid == $this->gid) {
             if(utils::deep_in_array($player->getName(), $this->playerdata)) {
                 switch($type) {
@@ -173,10 +172,9 @@ class GameCoreAPI extends PluginBase {
                         return false;
                     break;
 
-                    case 'chatchannel':
+                    case 'CHATCHANNEL':
                         $this->playerdata[$player->getName()]['chatchannel'] = $data;
                         return true;
-                    break;
                 }
             }
             return false;
@@ -184,11 +182,29 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
-    public function removePlayerData(int $gid, String $PlayerName) : bool {
+    public final function removePlayerData(int $gid, String $PlayerName) : bool {
         if($gid == $this->gid) {
             if(utils::deep_in_array($PlayerName, $this->playerdata)) {
                 unset($this->playerdata[$PlayerName]);
                 return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public final function getPlayerData(int $gid, Player $player, String $type) : ?bool {
+        if($gid == $this->gid) {
+            if(utils::deep_in_array($player->getName(), $this->playerdata)) {
+                switch($type) {
+
+                    default:
+                        return false;
+                    break;
+
+                    case 'CHATCHANNEL':
+                        return $this->playerdata[$player->getName()]['chatchannel'];
+                }
             }
             return false;
         }

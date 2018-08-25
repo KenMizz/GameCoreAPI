@@ -26,7 +26,7 @@ class ChatChannel {
     }
 
     //create
-    public function create(int $gameid, String $chatchannelname) {
+    public final function create(int $gameid, String $chatchannelname) {
         /**
          * 创建一个聊天频道
          * 需要:小游戏id(int) 聊天频道名(String)
@@ -53,7 +53,7 @@ class ChatChannel {
     }
 
     //remove
-    public function remove(int $gameid, String $chatchannelname) {
+    public final function remove(int $gameid, String $chatchannelname) {
         /**
          * 删除一个聊天频道
          * 需要:小游戏id(int) 聊天频道名(String)
@@ -85,7 +85,7 @@ class ChatChannel {
     }
 
     //addPlayer
-    public function addPlayer(int $gameid, String $chatchannelname, Array $players) {
+    public final function addPlayer(int $gameid, String $chatchannelname, Array $players) {
         /**
          * 添加玩家至指定的聊天频道
          * 需要:小游戏id(int) 聊天频道名(String) 玩家名(Array)
@@ -117,7 +117,7 @@ class ChatChannel {
     }
 
     //removePlayer
-    public function removePlayer(int $gameid, String $chatchannelname, Array $players) {
+    public final function removePlayer(int $gameid, String $chatchannelname, Array $players) {
         /**
          * 从指定的聊天频道移除玩家
          * 需要:小游戏id(int) 聊天频道名(String) 玩家名(Array)
@@ -155,7 +155,7 @@ class ChatChannel {
     }
 
     //setFormat
-    public function setFormat(int $gameid, String $chatchannelname, String $format) {
+    public final function setFormat(int $gameid, String $chatchannelname, String $format) {
         /**
          * 设置指定聊天频道的聊天格式
          * 需要:小游戏id(int) 聊天频道名(Stirng) 格式(String)
@@ -184,7 +184,7 @@ class ChatChannel {
     }
 
     //brocastMessage
-    public function brocastMessage(int $gameid, String $chatchannelname, String $message) {
+    public final function brocastMessage(int $gameid, String $chatchannelname, String $message) {
         /**
          * 在指定的聊天频道输出全局信息
          * 需要:小游戏id(int) 聊天频道名(String) 信息(String)
@@ -206,12 +206,13 @@ class ChatChannel {
     }
 
     //createDefaultChatChannel
-    public function createDefaultChatChannel(int $gid, String $name) : bool {
+    public final function createDefaultChatChannel(int $gid, String $name) : bool {
         if($this->gid = $gid) {
             $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
             $chatchannel[$name] = array(
                 'name' => $name,
                 'id' => $gid,
+                'format' => null,
                 'players' => array()
             );
             $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
@@ -222,7 +223,7 @@ class ChatChannel {
     }
 
     //addPlayerToDefaultChatChannel
-    public function addPlayerToDefaultChatChannel(int $gid, Array $players) : bool {
+    public final function addPlayerToDefaultChatChannel(int $gid, Array $players) : bool {
         if($this->gid = $gid) {
             $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
             $Settings = $this->plugin->get($this->id, "SETTINGS");
