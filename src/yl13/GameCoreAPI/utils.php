@@ -35,10 +35,27 @@ class utils {
             }
             if(in_array($value, $item)) {
                 return true;
-            } else if($this->deep_in_array($value, $item)) {
+            } else if(self::deep_in_array($value, $item)) {
                 return true;
             }
         }
         return false;
     }
+
+    //from(http://php.net/manual/en/function.copy.php)
+    public static function recurse_copy($src,$dst) { 
+        $dir = opendir($src); 
+        @mkdir($dst); 
+        while(false !== ( $file = readdir($dir)) ) { 
+            if (( $file != '.' ) && ( $file != '..' )) { 
+                if ( is_dir($src . '/' . $file) ) { 
+                    self::recurse_copy($src . '/' . $file,$dst . '/' . $file); 
+                } 
+                else { 
+                    copy($src . '/' . $file,$dst . '/' . $file); 
+                } 
+            } 
+        } 
+        closedir($dir); 
+    } 
 }

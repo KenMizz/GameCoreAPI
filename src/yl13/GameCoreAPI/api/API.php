@@ -24,10 +24,12 @@ class API {
 
     public $gamecore;
     public $chatchannel;
+    public $maploader;
 
-    public function __construct(GameCoreAPI $plugin, int $gamecoreid, array $chchannel) {
+    public function __construct(GameCoreAPI $plugin, int $gamecoreid, array $chatchannel, int $maploaderid) {
         $this->plugin = $plugin;
         $this->gamecore = new GameCore($plugin, $gamecoreid);
-        $this->chatchannel = new ChatChannel($plugin, $chchannel[0], $chchannel[1]);
+        $this->chatchannel = new ChatChannel($plugin, $chatchannel[0], $chatchannel[1]);
+        $this->maploader = new MapLoader($plugin, $maploaderid);
     }
 }
