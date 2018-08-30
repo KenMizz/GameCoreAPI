@@ -55,13 +55,17 @@ class GameCoreAPI extends PluginBase {
 
     private function initPlugin() {
         $this->getLogger()->notice(TF::GREEN."初始化GameCoreAPI中...");
-        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+        $this->gid = utils::generateId(8);
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this, $this->gid), $this);
         $this->ids[0] = utils::generateId(4);
         $this->ids[1] = utils::generateId(4);
-        $this->gid = utils::generateId(8);
-        $this->api = new API($this, $this->id[0], $this->id[1], $this->gid);
+        $this->ids[2] = utils::generateId(4);
+        $this->api = new API($this, $this->ids[0], array($this->ids[1], $this->gid), $this->ids[2]);
         if(!is_dir($this->getDataFolder())) {
             @mkdir($this->getDataFolder());
+        }
+        if(!is_dir($this->getDataFolder()."maps")) {
+            @mkdir($this->getDataFolder()."maps");
         }
         if(!is_file($this->getDataFolder()."config.yml")) {
             $this->saveDefaultConfig();

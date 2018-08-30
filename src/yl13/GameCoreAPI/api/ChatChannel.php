@@ -48,7 +48,7 @@ class ChatChannel {
                 $this->plugin->getLogger()->warning(TF::RED."小游戏 ".TF::WHITE.$gamename.TF::RED." 创建聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['channelname.already.existed']);
             }
         } else {
-            $this->plugin->getLogger()->warning(TF::RED."小游戏 ".TF::WHITE.$gamename.TF::RED." 创建聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
+            $this->plugin->getLogger()->warning(TF::RED."小游戏ID:".TF::WHITE.$gameid.TF::RED." 创建聊天频道".TF::WHITE.$chatchannelname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
         }
     }
 

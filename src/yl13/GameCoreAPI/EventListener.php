@@ -55,7 +55,14 @@ class EventListener implements Listener {
             } else {
                 $players = $chatchannel[$ChatChannelData]['players'];
                 $ev->setCancelled(true);
-                $this->plugin->getServer()->broadcastMessage($ev->getMessage(), $players);
+                $format = $chatchannel[$ChatChannelData]['format'];
+                if($format != null) {
+                    $format = str_replace("PLAYER_NAME", $Player->getName());
+                    $format = str_replace("MESSAGE", $ev->getMessage());
+                    $this->plugin->getServer()->broadcastMessage($format, $players);
+                } else {
+                    $this->plugin->getServer()->broadcastMessage("[{$Player->getName()}]{$ev->getMessage()}", $players);
+                }
             }
         }
     }
