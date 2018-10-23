@@ -1,4 +1,3 @@
 # GameCoreAPI
-GameCoreAPI是一个基于[PocketMine](https://github.com/pmmp/PocketMine-MP)的小游戏框架<br>
-[GameCoreAPI in Nukkit](https://github.com/KenMizz/GameCoreAPI-Nukkit)<br>
-先开着坑,万一做了呢
+GameCoreAPI是一个[PocketMine](https://github.com/pmmp/PocketMine-MP)的小游戏框架插件<br>
+使用[PHP](https://secure.php.net)语言编写<br>
