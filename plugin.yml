@@ -3,4 +3,4 @@ author: 游乐13
 version: 1.0.0
 main: yl13\GameCoreAPI\GameCoreAPI
 api:
-  - 3.3.0
+  - 3.3.1
