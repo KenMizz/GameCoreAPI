@@ -15,6 +15,7 @@ namespace yl13\GameCoreAPI;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\{TextFormat as TF, Config};
+use pocketmine\Player;
 
 use yl13\GameCoreAPI\api\API;
 
@@ -91,7 +92,7 @@ class GameCoreAPI extends PluginBase {
     }
 
     public final function get(int $id, String $type) {
-        if(utils::deep_in_array($id, $this->ids) or utils::deep_in_array($id, $this->gid)) {
+        if(utils::deep_in_array($id, $this->ids) or $id == $this->gid) {
             switch($type) {
 
                 case 'GAMECORE_VERSION':
