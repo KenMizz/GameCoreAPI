@@ -165,7 +165,7 @@ class ChatChannel {
         $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
         $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
         if(utils::deep_in_array($gameid, $registeredGame)) {
-            $gamename = $this->plugin->getGameNameById($this->gameid, gameid);
+            $gamename = $this->plugin->getGameNameById($this->id, gameid);
             if(utils::deep_in_array($chatchannelname, $chatchannel)) {
                 $id = $chatchannel[$chatchannelname]['id'];
                 if($id == $gameid) {
