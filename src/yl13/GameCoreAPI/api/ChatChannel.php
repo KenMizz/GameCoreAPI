@@ -63,7 +63,7 @@ class ChatChannel {
         $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
         if(utils::deep_in_array($gameid, $registeredGame)) {
             $id = $chatchannel[$chatchannelname]['id'];
-            $gamename = $this->plugin->getGameNameById($gameid);
+            $gamename = $this->plugin->getGameNameById($this->id, $gameid);
             if($id == $gameid) {
                 $players = $chatchannel[$chatchannelname]['players'];
                 foreach($players as $p) {
@@ -165,7 +165,7 @@ class ChatChannel {
         $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
         $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
         if(utils::deep_in_array($gameid, $registeredGame)) {
-            $gamename = $this->plugin->getGameNameById($gameid);
+            $gamename = $this->plugin->getGameNameById($this->gameid, gameid);
             if(utils::deep_in_array($chatchannelname, $chatchannel)) {
                 $id = $chatchannel[$chatchannelname]['id'];
                 if($id == $gameid) {
@@ -183,8 +183,8 @@ class ChatChannel {
         }
     }
 
-    //brocastMessage
-    public final function brocastMessage(int $gameid, String $chatchannelname, String $message) {
+    //broadcastMessage
+    public final function broadcastMessage(int $gameid, String $chatchannelname, String $message) {
         /**
          * 在指定的聊天频道输出全局信息
          * 需要:小游戏id(int) 聊天频道名(String) 信息(String)
@@ -192,7 +192,7 @@ class ChatChannel {
         $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
         $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
         if(utils::deep_in_array($gameid, $registeredGame)) {
-            $gamename = $this->plugin->getGameNameById($gameid);
+            $gamename = $this->plugin->getGameNameById($this->id, $gameid);
             if(utils::deep_in_array($chatchannelname, $chatchannel)) {
                 $Player = $chatchannel[$chatchannelname]['players'];
                 $this->plugin->getServer()->broadcastMessage($message, $Player);
