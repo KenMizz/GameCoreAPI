@@ -28,7 +28,6 @@ class GameCoreAPI extends PluginBase {
     private $ids = [];
     private $gid;
     private $settings = [
-        "chatchannel-enabled" => true,
         "default-chatchannel" => "lobby"
     ];
     
@@ -76,17 +75,11 @@ class GameCoreAPI extends PluginBase {
     }
 
     private function initConfig(Config $config) {
-        $chatchannelenabled = $config->get("chatchannel-enabled");
         $defaultchatchannel = $config->get("default-chatchannel");
-        if(!is_bool($chatchannelenabled)) {
-            $chatchannelenabled = true;
-        }
-        $this->settings["chatchannel-enabled"] = $chatchannelenabled;
-        $this->settings["defaultchatchannel"] = $defaultchatchannel;
-        if($this->settings['chatchannel-enabled']) {
-            if(is_string($this->settings['defaultchatchannel'])) {
-              $this->api->chatchannel->createDefaultChatChannel($this->gid, $this->settings['defaultchatchannel']);
-            }
+        $this->settings["default-chatchannel"] = $defaultchatchannel;
+        if(is_string($this->settings['default-chatchannel'])) {
+            $this->getLogger()->notice(TF::WHITE."正在创建默认聊天频道");  
+            $this->api->getChatChannelAPI()->createDefaultChatChannel($this->gid, $this->settings['default-chatchannel']);
         }
         $this->getLogger()->notice(TF::GREEN."GameCoreAPI初始化成功");
     }
@@ -170,7 +163,7 @@ class GameCoreAPI extends PluginBase {
 
     public final function setPlayerData(int $gid, Player $player, String $type, $data) : ?bool {
         if($gid == $this->gid) {
-            if(utils::deep_in_array($player->getName(), $this->playerdata)) {
+            if(isset($this->playerdata[$player->getName()])) {
                 switch($type) {
 
                     default:
@@ -189,7 +182,7 @@ class GameCoreAPI extends PluginBase {
 
     public final function removePlayerData(int $gid, String $PlayerName) : bool {
         if($gid == $this->gid) {
-            if(utils::deep_in_array($PlayerName, $this->playerdata)) {
+            if(isset($this->playerdata[$player->getName()])) {
                 unset($this->playerdata[$PlayerName]);
                 return true;
             }
@@ -198,9 +191,9 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
-    public final function getPlayerData(int $gid, Player $player, String $type) : ?bool {
+    public final function getPlayerData(int $gid, Player $player, String $type) {
         if($gid == $this->gid) {
-            if(utils::deep_in_array($player->getName(), $this->playerdata)) {
+            if(isset($this->playerdata[$player->getName()])) {
                 switch($type) {
 
                     default:

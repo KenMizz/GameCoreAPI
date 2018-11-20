@@ -164,8 +164,8 @@ class ChatChannel {
          */
         $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
         $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
-        if(utils::deep_in_array($gameid, $registeredGame)) {
-            $gamename = $this->plugin->getGameNameById($this->id, gameid);
+        if(utils::deep_in_array($gameid, $registeredGame) or $gameid == $this->gid) {
+            $gamename = $this->plugin->getGameNameById($this->id, $gameid);
             if(utils::deep_in_array($chatchannelname, $chatchannel)) {
                 $id = $chatchannel[$chatchannelname]['id'];
                 if($id == $gameid) {
@@ -207,7 +207,7 @@ class ChatChannel {
 
     //createDefaultChatChannel
     public final function createDefaultChatChannel(int $gid, String $name) : bool {
-        if($this->gid = $gid) {
+        if($this->gid == $gid) {
             $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
             $chatchannel[$name] = array(
                 'name' => $name,
@@ -224,25 +224,40 @@ class ChatChannel {
 
     //addPlayerToDefaultChatChannel
     public final function addPlayerToDefaultChatChannel(int $gid, Array $players) : bool {
-        if($this->gid = $gid) {
+        if($this->gid == $gid) {
             $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
             $Settings = $this->plugin->get($this->id, "SETTINGS");
-            if(!$Settings['default-chatchannel'] == null) {
-                $DefaultChatChannelName = $Settings['default-chatchannel'];
-                $ps = $chatchannel[$DefaultChatChannelName]['players'];
-                foreach($players as $p) {
-                    $Player = $this->plugin->getServer()->getPlayerExact($p);
-                    if($Player) {
-                        if(!utils::deeep_in_array($Player->getName(), $ps)) {
-                            $ps[$Player->getName()] = $Player;
-                        }
+            $DefaultChatChannelName = $Settings['default-chatchannel'];
+            $ps = $chatchannel[$DefaultChatChannelName]['players'];
+            foreach($players as $p) {
+                $Player = $this->plugin->getServer()->getPlayerExact($p);
+                if($Player) {
+                    if(!utils::deep_in_array($Player->getName(), $ps)) {
+                        $ps[$Player->getName()] = $Player;
                     }
                 }
-                $chatchannel[$chatchannelname]['players'] = $ps;
-                $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
-                return true;
             }
-            return false;
+            $chatchannel[$DefaultChatChannelName]['players'] = $ps;
+            $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
+            return true;
+        }
+        return false;
+    }
+
+    //removePlayerFromDefaultChatChannel
+    public final function removePlayerFromDefaultChatChannel(int $gid, Array $players) : bool {
+        if($this->gid == $gid) {
+            $chatchannel = $this->plugin->get($this->id, "CHATCHANNEL");
+            $Settings = $this->plugin->get($this->id, "SETTINGS");
+            $DefaultChatChannelName = $Settings['default-chatchannel'];
+            foreach($players as $p) {
+                $Player = $this->plugin->getServer()->getPlayerExact($p);
+                if(isset($chatchannel[$DefaultChatChannelName]['players'][$Player->getName()])) {
+                    unset($chatchannel[$DefaultChatChannelName]['players'][$Player->getName()]);
+                }
+            }
+            $this->plugin->override($this->id, "CHATCHANNEL", $chatchannel);
+            return true;
         }
         return false;
     }

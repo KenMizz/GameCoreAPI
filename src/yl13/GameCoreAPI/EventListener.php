@@ -14,9 +14,10 @@
 namespace yl13\GameCoreAPI;
 
 use pocketmine\event\Listener;
-use pocketmine\event\player\{PlayerJoinEvent, PlayerQuitEvent, PlayerChatEvent};
-
-use yl13\GameCoreAPI\GameCoreAPI;
+use pocketmine\event\player\{
+    PlayerJoinEvent, PlayerQuitEvent, PlayerChatEvent
+};
+use pocketmine\event\server\DataPacketReceiveEvent as DPREvent;
 
 
 class EventListener implements Listener {
@@ -34,12 +35,14 @@ class EventListener implements Listener {
         $this->plugin->initPlayerData($this->gid, $Player);
         $Settings = $this->plugin->get($this->gid, "SETTINGS");
         if($Settings['default-chatchannel'] != null) {
+            $this->plugin->api->getChatChannelAPI()->addPlayerToDefaultChatChannel($this->gid, array($Player->getName()));
             $this->plugin->setPlayerData($this->gid, $Player, "CHATCHANNEL", $Settings['default-chatchannel']);
         }
     }
 
     public function onQuit(PlayerQuitEvent $ev) {
         $Player = $ev->getPlayer();
+        $this->plugin->api->getChatChannelAPI()->removePlayerFromDefaultChatChannel($this->gid, array($Player->getName()));
         $this->plugin->removePlayerData($this->gid, $Player->getName());
     }
 
@@ -50,18 +53,19 @@ class EventListener implements Listener {
             $ev->setCancelled(true);
         } else {
             $chatchannel = $this->plugin->get($this->gid, "CHATCHANNEL");
-            if(!utils::deep_in_array($ChatChannelData, $chatchannel)) {
+            if(!isset($chatchannel[$ChatChannelData])) {
                 $ev->setCancelled(true);
             } else {
                 $players = $chatchannel[$ChatChannelData]['players'];
                 $ev->setCancelled(true);
                 $format = $chatchannel[$ChatChannelData]['format'];
+                
                 if($format != null) {
-                    $format = str_replace("PLAYER_NAME", $Player->getName());
-                    $format = str_replace("MESSAGE", $ev->getMessage());
+                    $format = str_replace("PLAYER_NAME", $Player->getName(), $format);
+                    $format = str_replace("MESSAGE", $ev->getMessage(), $format);
                     $this->plugin->getServer()->broadcastMessage($format, $players);
                 } else {
-                    $this->plugin->getServer()->broadcastMessage("[{$Player->getName()}]{$ev->getMessage()}", $players);
+                    $this->plugin->getServer()->broadcastMessage("[{$Player->getName()}] {$ev->getMessage()}", $players);
                 }
             }
         }
