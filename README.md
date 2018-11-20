@@ -5,5 +5,5 @@ GameCoreAPI是一个[PocketMine](https://github.com/pmmp/PocketMine-MP)的小游
 使用方法请参考[Wiki](https://github.com/KenMizz/GameCoreAPI/wiki)<br>
 # 功能
 - [x] 聊天频道
-- [x] 地图加载器
+- [x] 多地图加载
 - [ ] 经济
