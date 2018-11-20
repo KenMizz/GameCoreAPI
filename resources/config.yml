@@ -7,3 +7,4 @@
 
 #聊天频道
 default-chatchannel: "lobby"  #初始聊天频道(留空则不创建初始频道)
+chatchannel-enabled: true #聊天频道是否开启
