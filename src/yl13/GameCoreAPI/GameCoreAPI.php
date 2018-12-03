@@ -148,9 +148,13 @@ class GameCoreAPI extends PluginBase {
         }
     }
 
+    /**
+     * playerData
+     */
     public final function initPlayerData(int $gid, Player $player) : bool {
-        if($gid == $this->gid) {
-            if(!utils::deep_in_array($player->getName(), $this->playerdata)) {
+        //initPlayerData
+        if($this->gid == $gid) {
+            if(!isset($this->playerdata[$player->getName()])) {
                 $this->playerdata[$player->getName()] = array(
                     'chatchannel' => null
                 );
@@ -161,8 +165,9 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
-    public final function setPlayerData(int $gid, Player $player, String $type, $data) : ?bool {
-        if($gid == $this->gid) {
+    public final function setPlayerData(int $gid, Player $player, String $type, $override) : bool {
+        //setPlayerData
+        if($this->gid == $gid) {
             if(isset($this->playerdata[$player->getName()])) {
                 switch($type) {
 
@@ -171,7 +176,9 @@ class GameCoreAPI extends PluginBase {
                     break;
 
                     case 'CHATCHANNEL':
-                        $this->playerdata[$player->getName()]['chatchannel'] = $data;
+                        $this->playerdata[$player->getName()] = array(
+                            'chatchannel' => $override
+                        );
                         return true;
                 }
             }
@@ -180,25 +187,11 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
-    public final function removePlayerData(int $gid, String $PlayerName) : bool {
-        if($gid == $this->gid) {
-            if(isset($this->playerdata[$player->getName()])) {
-                unset($this->playerdata[$PlayerName]);
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    public final function getPlayerData(int $gid, Player $player, String $type) {
-        if($gid == $this->gid) {
+    public final function getPlayerData(int $gid, Player $player, String $type) : ?bool {
+        //getPlayerData
+        if($this->gid == $gid) {
             if(isset($this->playerdata[$player->getName()])) {
                 switch($type) {
-
-                    default:
-                        return false;
-                    break;
 
                     case 'CHATCHANNEL':
                         return $this->playerdata[$player->getName()]['chatchannel'];
@@ -208,4 +201,28 @@ class GameCoreAPI extends PluginBase {
         }
         return false;
     }
+
+    public final function getPlayerAllData(int $gid, Player $player) : ?Array {
+        //getPlayerAllData
+        if($this->gid == $gid) {
+            if(isset($this->playerdata[$player->getName()])) {
+                return $this->playerdata[$player->getName()];
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public final function removePlayerData(int $gid, Player $player) : bool {
+        //removePlayerData
+        if($this->gid == $gid) {
+            if(isset($this->playerdata[$player->getName()])) {
+                unset($this->playerdata[$player->getName()]);
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
 }

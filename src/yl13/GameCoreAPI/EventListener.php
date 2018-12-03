@@ -43,7 +43,7 @@ class EventListener implements Listener {
     public function onQuit(PlayerQuitEvent $ev) {
         $Player = $ev->getPlayer();
         $this->plugin->api->getChatChannelAPI()->removePlayerFromDefaultChatChannel($this->gid, array($Player->getName()));
-        $this->plugin->removePlayerData($this->gid, $Player->getName());
+        $this->plugin->removePlayerData($this->gid, $Player);
     }
 
     public function onChat(PlayerChatEvent $ev) {
@@ -59,7 +59,6 @@ class EventListener implements Listener {
                 $players = $chatchannel[$ChatChannelData]['players'];
                 $ev->setCancelled(true);
                 $format = $chatchannel[$ChatChannelData]['format'];
-                
                 if($format != null) {
                     $format = str_replace("PLAYER_NAME", $Player->getName(), $format);
                     $format = str_replace("MESSAGE", $ev->getMessage(), $format);
