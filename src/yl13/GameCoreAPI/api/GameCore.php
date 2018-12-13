@@ -15,7 +15,7 @@ class gamecore {
     }
 
     
-    public function registerGame(String $name, String $author = null) {
+    final public function registerGame(String $name, String $author = null) : int {
         $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
         $id = $this->plugin->randnum(8);
         while(isset($registeredGames[$id])) {
@@ -31,5 +31,10 @@ class gamecore {
         } else {
             $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!");
         }
+        return $id;
+    }
+
+    final public function getVersion() : String {
+        return GameCoreAPI::VERSION;
     }
 }

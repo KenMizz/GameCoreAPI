@@ -50,6 +50,7 @@ class GameCoreAPI extends PluginBase {
         $this->initConfigure(new Config($this->getDataFolder().'config.yml', Config::YAML));
         $this->api = new API($this, $this->randnum(6));
         $this->getLogger()->notice(TF::GREEN."初始化成功!");
+        $this->getLogger()->notice(TF::YELLOW."当前版本:".TF::WHITE.self::VERSION);
     }
 
     private function initConfigure(Config $config) {
@@ -67,7 +68,7 @@ class GameCoreAPI extends PluginBase {
         return self::$instance;
     }
 
-    public final function randnum(int $digit) : int {
+    final public function randnum(int $digit) : int {
         $num = null;
         for($i = 0;$i < $digit;$i++) {
             $num .= mt_rand(0, 9);
@@ -75,7 +76,7 @@ class GameCoreAPI extends PluginBase {
         return $num;
     }
 
-    public final function get(GameCoreAPI $plugin, String $type) {
+    final public function get(GameCoreAPI $plugin, String $type) {
         switch($type) {
 
             case 'RGAME':
