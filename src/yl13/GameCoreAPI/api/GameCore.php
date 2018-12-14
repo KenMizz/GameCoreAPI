@@ -16,6 +16,12 @@ class gamecore {
 
     
     final public function registerGame(String $name, String $author = null) : int {
+        /**
+         * 注册小游戏以获取小游戏id
+         * require: String 小游戏名
+         * optional: String 作者名
+         * return: int
+         */
         $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
         $id = $this->plugin->randnum(8);
         while(isset($registeredGames[$id])) {
@@ -35,6 +41,22 @@ class gamecore {
     }
 
     final public function getVersion() : String {
+        /**
+         * 获取GameCoreAPI的版本
+         * return: String
+         */
         return GameCoreAPI::VERSION;
+    }
+
+    final public function isGameRegistered(int $id) : bool {
+        /**
+         * 检查游戏是否被注册
+         * return: bool
+         */
+        $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
+        if(!isset($registeredGames[$id])) {
+            return false;
+        }
+        return true;
     }
 }

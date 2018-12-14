@@ -8,4 +8,4 @@
 
 chatchannel:
   enabled: true
-  default-chatchannel: 'lobby'
+  default: 'lobby'

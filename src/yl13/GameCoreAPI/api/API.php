@@ -16,4 +16,8 @@ class API {
     final public function getGameCoreAPI() {
         return new gamecore($this->plugin);
     }
+
+    final public function getChatChannelAPI() {
+        return new chatchannel($this->plugin);
+    }
 }

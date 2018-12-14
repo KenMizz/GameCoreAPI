@@ -16,13 +16,14 @@ class GameCoreAPI extends PluginBase {
     private static $instance;
 
     private $registeredGames = [];
+    private $ChatChannel = [];
 
     public $api;
 
     private $Configure = array(
         'chatchannel' => array(
             'enabled' => true,
-            'default-chatchannel' => 'lobby'
+            'default' => 'lobby'
         )
     );
 
@@ -58,8 +59,8 @@ class GameCoreAPI extends PluginBase {
         if(!is_bool($chatchannel['enabled'])) {
             $chatchannel['enabled'] = true;   
         }
-        if(!is_string($chatchannel['default-chatchannel'])) {
-            $chatchannel['default-chatchannel'] = 'lobby';
+        if(!is_string($chatchannel['default'])) {
+            $chatchannel['default'] = 'lobby';
         }
         $this->Configure['chatchannel'] = $chatchannel;
     }
@@ -76,19 +77,50 @@ class GameCoreAPI extends PluginBase {
         return $num;
     }
 
+    final function getConfigure(String $value) {
+        switch($value) {
+
+            default:
+                return false;
+            break;
+
+            case 'chatchannel-enabled':
+                return $this->Configure['chatchannel']['enabled'];
+            break;
+
+            case 'chatchannel-default':
+                return $this->Configure['chatchannel']['default'];
+        }
+    }
+
     final public function get(GameCoreAPI $plugin, String $type) {
         switch($type) {
 
             case 'RGAME':
                 return $this->registeredGames;
+            break;
+
+            case 'CHATCHANNEL':
+                return $this->ChatChannel;
         }
     }
 
-    public final function set(GameCoreAPI $plugin, String $type, $override) {
+    final public function set(GameCoreAPI $plugin, String $type, $override) {
         switch($type) {
 
             case 'RGAME':
                 $this->registeredGames = $override;
+            break;
+            
+            case 'CHATCHANNEL':
+                $this->ChatChannel = $override;
         }
+    }
+
+    final function getGameNameById(int $gameid) : ?String {
+        if(isset($this->registeredGames[$gameid])) {
+            return $this->registeredGames[$gameid]['name'];
+        }
+        return null;
     }
 }
