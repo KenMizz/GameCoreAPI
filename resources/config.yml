@@ -8,4 +8,5 @@
 
 chatchannel:
   enabled: true
-  default: 'lobby'
+  default: 'lobby' #如果为null则不创建默认聊天频道
+  chatFormat: null #聊天格式

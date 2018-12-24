@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace yl13\GameCoreAPI\api;
 
 use yl13\GameCoreAPI\GameCoreAPI;
