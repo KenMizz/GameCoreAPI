@@ -22,4 +22,8 @@ class API {
     final public function getChatChannelAPI() {
         return new chatchannel($this->plugin);
     }
+
+    final public function getMapLoaderAPI() {
+        return new MapLoader($this->plugin);
+    }
 }
