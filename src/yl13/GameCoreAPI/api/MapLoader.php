@@ -3,77 +3,132 @@
 namespace yl13\GameCoreAPI\api;
 
 use pocketmine\utils\TextFormat as TF;
+use pocketmine\level\Level;
 
-use yl13\GameCoreAPI\{GameCoreAPI, utils};
+use yl13\GameCoreAPI\GameCoreAPI;
 
 class MapLoader {
 
-    private $plugin, $id;
-    private $requestList = [];
-    private $failedreason = [
-        'map.not.found' => '指定地图无法找到',
-        'map.remove.permission.denined' => '权限不足,无法移除指定地图',
-        'map.not.load.by.this.game' => '指定地图非此游戏加载',
-        'gameid.unregonize' => '小游戏id不存在'
+    private $plugin;
+
+    const FAILED_REASON = [
+        'GAMEID_NOT_REGISTERED' => '游戏id没有被注册!',
+        'map.not.exists' => '指定地图不存在',
+        'map.exists' => '指定地图已存在',
+        'map.unload.failed' => '指定地图卸载失败'
     ];
 
-    public function __construct(GameCoreAPI $plugin, int $id) {
+    public function __construct(GameCoreAPI $plugin) {
         $this->plugin = $plugin;
-        $this->id = $id;
     }
 
-    public final function loadMap(int $gameid, String $mapname, String $changename = "unknown") {
+    final public function create(int $gameid, String $worldname) : bool {
         /**
-         * 加载一张指定地图
-         * (地图文件夹需要先放至plugins\GameCoreAPI\maps文件夹下)
-         * 需要:小游戏id(int) 地图名(String)
-         * 可用:更换地图名(String)
+         * 将/worlds文件夹下的某张地图创建成MapLoader API可调用的地图
+         * require: int 小游戏id, String 世界名
+         * return: bool
          */
-        $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
-        if(utils::deep_in_array($gameid, $registeredGame)) {
-            if(!is_dir($this->plugin->getDataFolder()."maps/{$mapname}")) {
-                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($this->id, $gameid).TF::RED." 无法加载地图,原因:".TF::WHITE.$this->$failedreason['map.not.found']);
-            } else {
-                if($changename == "unknown") {
-                    $this->requestList[$gameid][$mapname] = $changename;
-                    utils::recurse_copy($this->plugin->getDataFolder()."maps/{$mapname}", $this->plugin->getServer()->getDataPath()."worlds/{$mapname}");
-                    $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($this->id, $gameid).TF::AQUA." 加载地图".TF::WHITE.$mapname.TF::AQUA."成功");
-                } else {
-                    $this->requestList[$gameid][$changename] = $mapname;
-                    utils::recurse_copy($this->plugin->getDataFolder()."maps/{$mapname}", $this->plugin->getServer()->getDataPath()."worlds/{$changename}");
-                    $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($this->id, $gameid).TF::AQUA." 加载地图".TF::WHITE.$mapname.TF::AQUA."成功,并改名为".TF::WHITE.$changename);
-                }
-            }
-        } else {
-            $this->plugin->getLogger()->warning("小游戏ID:".TF::WHITE.$gameid.TF::RED."加载地图".TF::WHITE.$mapname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
-        }
-    }
-
-    public final function removeMap(int $gameid, String $mapname) {
-        /**
-         * 移除一张指定地图
-         * 注:只允许移除由自己加载的地图
-         * 需要:小游戏id(int) 地图名(String)
-         * 注:如果你加载的地图名是更改过名字的,那么地图名参数填成更改过名字的即可
-         */
-        $registeredGame = $this->plugin->get($this->id, "REGISTERED_GAME");
-        if(utils::deep_in_array($gameid, $registeredGame)) {
-            if(isset($this->requestList[$gameid][$mapname])) {
-                if(is_dir($this->plugin->getServer()->getDataPath()."worlds/{$mapname}")) {
-                    unset($this->requestList[$gameid][$mapname]);
-                    $df = unlink($this->plugin->getServer()->getDataPath()."worlds/{$mapname}");
-                    if($df) {
-                        $this->plugin->getLogger()->notice("小游戏 ".TF::WHITE.$this->plugin->getGameNamById($this->id, $gameid).TF::AQUA." 移除地图".TF::WHITE.$mapname.TF::AQUA."成功");
-                    } else {
-                        $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($this->id, $gameid).TF::AQUA." 移除地图".TF::WHITE.$mapname.TF::RED."原因:".TF::WHITE.$this->failedreason['map.remove.permission.denined']);
+        $registeredGame = $this->plugin->get($this->plugin, 'RGAME');
+        if(isset($registeredGame[$gameid])) {
+            $Level = $this->plugin->getServer()->getLevelByName($worldname);
+            if($Level instanceof Level) {
+                if(!is_dir($this->plugin->getDataFolder()."maps/{$worldname}")) {
+                    $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 创建".TF::WHITE.$worldname.TF::GREEN."为游戏地图请求成功");
+                    $result = $this->plugin->getServer()->unloadLevel($Level);
+                    if($result) {
+                        $this->plugin->getLogger()->notice(TF::YELLOW."卸载地图: ".TF::WHITE.$worldname.TF::YELLOW."成功,正在创建为游戏地图...");
+                        $this->recurse_copy($this->plugin->getServer()->getDataPath()."worlds/{$worldname}", $this->plugin->getDataFolder()."maps/{$worldname}");
+                        $this->plugin->getLogger()->notice(TF::GREEN."游戏地图创建成功!");
+                        return true;
                     }
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 创建".TF::WHITE.$worldname.TF::YELLOW."为游戏地图失败,原因:".TF::WHITE.self::FAILED_REASON['map.unload.failed']);
+                    return false;
+                }
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 创建".TF::WHITE.$worldname.TF::YELLOW."为游戏地图失败,原因:".TF::WHITE.self::FAILED_REASON['map.exists']);
+                return false;
+            }
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 创建".TF::WHITE.$worldname.TF::YELLOW."为游戏地图失败,原因:".TF::WHITE.self::FAILED_REASON['map.not.exists']);
+            return false;
+        }
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."创建".TF::WHITE.$worldname.TF::YELLOW."为游戏地图失败,原因:".TF::WHITE.$this->failedreason['GAMEID_NOT_REGISTERED']);
+        return false;
+    }
+
+    final public function load(int $gameid, String $worldname, String $changedname = null) : bool {
+        /**
+         * 将GameCoreAPI的/maps文件夹下的某个地图加载进世界
+         * require: int 小游戏id, String 世界名
+         * 可用: String 加载进世界时的世界名
+         * 注: $changedname参数可以让你以另一个名字把指定地图加载进世界,比如你想要加载的地图名为a,然后你在$changedname参数里填上了b,那么加载进世界的会是一个叫做b的世界名
+         */
+        $registeredGame = $this->plugin->get($this->plugin, 'RGAME');
+        if(isset($registeredGame[$gameid])) {
+            if(is_dir($this->plugin->getDataFolder()."maps/{$worldname}")) {
+                if(is_string($changedname)) {
+                    if(!is_dir($this->plugin->getServer()->getDataPath()."worlds/{$changedname}")) {
+                        $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 加载地图".TF::WHITE.$worldname.TF::GREEN."请求成功");
+                        $this->recurse_copy($this->plugin->getDataFolder()."maps/".$worldname."", $this->plugin->getServer()->getDataPath()."worlds/".$changedname."");
+                        $this->plugin->getLogger()->notice(TF::YELLOW."地图: ".TF::WHITE.$worldname.TF::YELLOW."复制成功,正在修改nbt内的数据以保证地图名和文件夹名一致");
+                        $this->plugin->getServer()->loadLevel($changedname);
+                        $Level = $this->plugin->getServer()->getLevelByName($changedname);
+                        $Tag = $Level->getProvider()->getLevelData();
+                        $Tag->setString("LevelName", $changedname, true); //强制修改
+                        $this->plugin->getLogger()->notice(TF::YELLOW."地图: ".TF::WHITE.$worldname.TF::YELLOW."nbt数据修改成功");
+                        $this->plugin->getServer()->unloadLevel($Level);
+                        $result = $this->plugin->getServer()->loadLevel($changedname);
+                        if($result) {
+                            $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 加载地图".TF::WHITE.$worldname.TF::GREEN."成功");
+                            return true;
+                        }
+                        $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['map.not.exists']);
+                        return false;
+                    }
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['map.exists']);
+                    return false;
                 } else {
-                    unset($this->requestList[$gameid][$mapname]);
-                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($this->id, $gameid).TF::AQUA." 移除地图失败".TF::WHITE.$mapname.TF::RED."原因:".TF::WHITE.$this->failedreason['map.not.found']);
+                    if(!is_dir($this->plugin->getServer()->getDataPath()."worlds\{$worldname}")) {
+                        $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 加载地图".TF::WHITE.$worldname.TF::GREEN."请求成功");
+                        $this->recurse_copy($this->plugin->getDataFolder()."maps/".$worldname."", $this->plugin->getServer()->getDataPath()."worlds/".$worldname."");
+                        $this->plugin->getLogger()->notice(TF::YELLOW."地图: ".TF::WHITE.$worldname.TF::YELLOW."复制成功,正在修改nbt内的数据以保证地图名和文件名一致");
+                        $this->plugin->getServer()->loadLevel($worldname);
+                        $Level = $this->plugin->getServer()->getLevelByName($worldname);
+                        $Tag = $Level->getProvider()->getLevelData();
+                        $Tag->setString("LevelName", $worldname, true); //强制修改
+                        $this->plugin->getLogger()->notice(TF::YELLOW."地图: ".TF::WHITE.$worldname.TF::YELLOW."nbt数据修改成功");
+                        $this->plugin->getServer()->unloadLevel($Level);
+                        $result = $this->plugin->getServer()->loadLevel($worldname);
+                        if($result) {
+                            $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 加载地图".TF::WHITE.$worldname.TF::GREEN."成功");
+                            return true;
+                        }
+                        $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['map.not.exists']);
+                        return false;
+                    }
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['map.exists']);
+                    return false;
                 }
             }
-        } else {
-            $this->plugin->getLogger()->warning("小游戏ID:".TF::WHITE.$gameid.TF::RED."移除地图".TF::WHITE.$mapname.TF::RED."失败,原因:".TF::WHITE.$this->failedreason['gameid.unregonize']);
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['map.not.exists']);
+            return false;
         }
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.$this->failedreason['GAMEID_NOT_REGISTERED']);
+        return false;
     }
+
+    private function recurse_copy($src,$dst) {
+        //from http://php.net/manual/en/function.copy.php 
+        $dir = opendir($src); 
+        @mkdir($dst); 
+        while(false !== ( $file = readdir($dir)) ) { 
+            if (( $file != '.' ) && ( $file != '..' )) { 
+                if ( is_dir($src . '/' . $file) ) { 
+                    $this->recurse_copy($src . '/' . $file,$dst . '/' . $file); 
+                } 
+                else { 
+                    copy($src . '/' . $file,$dst . '/' . $file); 
+                } 
+            } 
+        } 
+        closedir($dir); 
+    } 
 }
