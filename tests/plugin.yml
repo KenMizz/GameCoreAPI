@@ -1,0 +1,15 @@
+name: GCAPI-TesterPlugin
+author: 游乐13
+version: 1.0.0
+main: Tester\Tester
+api:
+  - 3.5.5
+
+commands:
+  rtp:
+    permission: rtp.op
+    description: rtp
+
+permissions:
+  rtp.op:
+    default: op
