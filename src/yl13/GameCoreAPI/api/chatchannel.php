@@ -213,6 +213,32 @@ class chatchannel {
         return false;
     }
 
+    final public function broadcastMessage(int $gameid, String $name, String $message) : bool {
+        /**
+         * 在指定频道发送全体信息
+         * require: int 小游戏id, String 聊天频道名, String 聊天信息
+         * return: bool
+         */
+        $registeredGame = $this->plugin->get($this->plugin, 'RGAME');
+        if(isset($registeredGame[$gameid])) {
+            $ChatChannel = $this->plugin->get($this->plugin, 'CHATCHANNEL');
+            if($this->plugin->getConfigure('chatchannel-enabled')) {
+                if($ChatChannel[$name]['id'] == $gameid) {
+                    $Players = $ChatChannel[$name]['players'];
+                    $this->plugin->getServer()->broadcastMessage($message, $Players);
+                    $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 发送全局信息到".TF::WHITE.$name.TF::GREEN."成功");
+                    return true;
+                }
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.$this->failedreason['CHATCHANNEL_NOT_OWNED']);
+                return false;
+            }
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.$this->failedreason['API_DISABLED']);
+            return false;
+        }
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.$this->failedreason['GAMEID_NOT_REGISTERED']);
+        return false;
+    }
+
     final public function remove(int $gameid, String $name) : bool {
         /**
          * 移除聊天频道
