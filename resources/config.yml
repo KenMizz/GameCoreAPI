@@ -13,7 +13,7 @@ chatchannel:
 
 economy:
   enabled: true
-  money-name: "Money" #默认金钱名
+  money-name: 'Money' #默认金钱名
   money-max-limit: 9223372036854775807 #可持有的最大金钱数量 默认:PHP_INT_MAX
   auto-save: true #是否自动储存金钱文件
   auto-save-time: 6000 #自动储存的时间，如果上面的设置没有开启那么这个就不会生效 需要Minecraft tick(即1秒=20tick)，默认5分钟(300 * 20 = 6000)
