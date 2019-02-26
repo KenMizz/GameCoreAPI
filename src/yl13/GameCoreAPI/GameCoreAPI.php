@@ -22,6 +22,7 @@ class GameCoreAPI extends PluginBase {
     private $registeredGames = [];
     private $ChatChannel = [];
     private $playerData = [];
+    private $playermoneyData = [];
 
     public $api;
 
