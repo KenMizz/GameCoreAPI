@@ -14,7 +14,7 @@ use yl13\GameCoreAPI\api\API;
 
 class GameCoreAPI extends PluginBase {
 
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
     private $gcid;
 
     private static $instance;
@@ -30,6 +30,13 @@ class GameCoreAPI extends PluginBase {
             'enabled' => true,
             'default' => 'lobby',
             'chatFormat' => null
+        ),
+        'money' => array(
+            'enabled' => true,
+            'money-name' => 'Money',
+            'money-max-limit' => 9223372036854775807,
+            'auto-save' => true,
+            'auto-save-time' => 6000
         )
     );
 
@@ -56,13 +63,15 @@ class GameCoreAPI extends PluginBase {
             @mkdir($this->getDataFolder().'maps');
         }
         $this->initConfigure(new Config($this->getDataFolder().'config.yml', Config::YAML));
-        $this->api = new API($this, $this->randnum(6));
+        $this->api = new API($this);
         $this->getLogger()->notice(TF::GREEN."初始化成功!");
-        $this->getLogger()->notice(TF::YELLOW."当前版本:".TF::WHITE.self::VERSION);
+        $this->getLogger()->notice(TF::GREEN."当前版本:".TF::WHITE.self::VERSION);
     }
 
     private function initConfigure(Config $config) {
+        //TODO: 新的Config校验
         $chatchannel = $config->get('chatchannel');
+        $economy = $config->get('economy');
         if(!is_bool($chatchannel['enabled'])) {
             $chatchannel['enabled'] = true;   
         }
@@ -81,6 +90,7 @@ class GameCoreAPI extends PluginBase {
             );
             $this->getLogger()->notice(TF::GREEN."已创建默认聊天频道:".TF::WHITE.$chatchannel['default']);
         }
+
         $this->Configure['chatchannel'] = $chatchannel;
     }
 
