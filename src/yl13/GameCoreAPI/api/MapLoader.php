@@ -7,7 +7,7 @@ use pocketmine\level\Level;
 
 use yl13\GameCoreAPI\GameCoreAPI;
 
-class MapLoader {
+class maploader {
 
     private $plugin;
 
