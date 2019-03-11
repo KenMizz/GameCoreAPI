@@ -10,8 +10,6 @@ use pocketmine\utils\{
 };
 use pocketmine\Player;
 
-use yl13\GameCoreAPI\api\API;
-
 class GameCoreAPI extends PluginBase {
 
     const VERSION = '1.0.1';
@@ -22,7 +20,6 @@ class GameCoreAPI extends PluginBase {
     private $registeredGames = [];
     private $ChatChannel = [];
     private $playerData = [];
-    private $playermoneyData = [];
 
     public $api;
 
@@ -32,7 +29,7 @@ class GameCoreAPI extends PluginBase {
             'default' => 'lobby',
             'chatFormat' => null
         ),
-        'money' => array(
+        'economy' => array(
             'enabled' => true,
             'money-name' => 'Money',
             'money-max-limit' => 9223372036854775807,
@@ -65,7 +62,7 @@ class GameCoreAPI extends PluginBase {
         }
         $this->initChatChannel(new Config($this->getDataFolder().'config.yml', Config::YAML));
         $this->initEconomy(new Config($this->getDataFolder().'config.yml', Config::YAML));
-        $this->api = new API($this);
+        $this->api = new api\API($this);
         $this->getLogger()->notice(TF::GREEN."初始化成功!");
         $this->getLogger()->notice(TF::GREEN."当前版本:".TF::WHITE.self::VERSION);
     }
@@ -126,17 +123,28 @@ class GameCoreAPI extends PluginBase {
                 new Config($this->getDataFolder().'money.yml', Config::YAML);   
             }
             $config = new Config($this->getDataFolder().'money.yml', Config::YAML);
-            $this->playermoneyData = $config->getAll();
+            $moneydata = $config->getAll();
+            foreach($moneydata as $key => $value) {
+                $this->playerData[$key]['money'] = $value; 
+            }
             if($this->getConfigure('economy', 'auto-save') == true) {
                 $this->getScheduler()->scheduleRepeatingTask(new AutoSaveTask($this), $this->getConfigure('economy', 'auto-save-time'));
             }
         }
     }
 
-    public static function getInstance() {
+    /**
+     * @return yl13\GameCoreAPI\GameCoreAPI
+     */
+    public static function getInstance() : GameCoreAPI {
         return self::$instance;
     }
 
+    /**
+     * @param int $digit
+     * 
+     * @return int
+     */
     final public function randnum(int $digit) : int {
         $num = null;
         for($i = 0;$i < $digit;$i++) {
@@ -145,17 +153,27 @@ class GameCoreAPI extends PluginBase {
         return (int)$num;
     }
 
-    final public function initPlayerData(GameCoreAPI $plugin, Player $player) : bool {
+    /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param pocketmine\Player $player
+     */
+    final public function initPlayerData(GameCoreAPI $plugin, Player $player) {
         if(!isset($this->playerData[$player->getName()])) {
             $this->playerData[$player->getName()] = array(
-                'chatchannel' => null
+                'chatchannel' => null,
+                'money' => 0
             );
-            return true;
         }
-        return false;
+        $this->playerData[$player->getName()]['chatchannel'] = null;
     }
 
-    final public function setPlayerData(GameCoreAPI $plugin, Player $player, String $type, $value) : bool {
+    /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param pocketmine\Player $player
+     * 
+     * @return bool
+     */
+    final public function setPlayerData(GameCoreAPI $plugin, Player $player, string $type, $value) : bool {
         if(isset($this->playerData[$player->getName()])) {
             switch($type) {
 
@@ -166,18 +184,30 @@ class GameCoreAPI extends PluginBase {
                 case 'CHATCHANNEL':
                     $this->playerData[$player->getName()]['chatchannel'] = $value;
                     return true;
+                break;
+
+                case 'MONEY':
+                    $this->playerData[$player->getName()]['money'] = $value;
             }
         }
     }
 
-    final public function getPlayerData(GameCoreAPI $plugin, Player $player) : ?Array {
+    /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param pocketmine\Player $player
+     * 
+     * @return array|null
+     */
+    final public function getPlayerData(GameCoreAPI $plugin, Player $player) : ?array {
         return $this->playerData[$player->getName()] ?? null;
     }
 
-    final public function getPlayerMoneyData(GameCoreAPI $plugin, Player $player) : ?int {
-        return $this->playermoneyData[$player->getName()] ?? null;
-    }
-
+    /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param pocketmine\Player $player
+     * 
+     * @return bool
+     */
     final public function removePlayerData(GameCoreAPI $plugin, Player $player) : bool {
         if(isset($this->playerData[$player->getName()])) {
             unset($this->playerData[$player->getName()]);
@@ -186,15 +216,27 @@ class GameCoreAPI extends PluginBase {
         return false;
     }
 
+    /**
+     * @param mixed $key
+     * @param mixed $value
+     * 
+     * @return mixed|null
+     */
     final public function getConfigure($key, $value) {
         return $this->Configure[$key][$value] ?? null;
     }
 
-    final public function get(GameCoreAPI $plugin, String $type) {
+    /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param string $type
+     * 
+     * @return array|null
+     */
+    final public function get(GameCoreAPI $plugin, string $type) : ?array {
         switch($type) {
 
             default:
-                return false;
+                return null;
             break;
 
             case 'RGAME':
@@ -206,11 +248,18 @@ class GameCoreAPI extends PluginBase {
         }
     }
 
-    final public function set(GameCoreAPI $plugin, String $type, $override) {
+    /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param string $type
+     * @param mixed $override
+     * 
+     * @return void
+     */
+    final public function set(GameCoreAPI $plugin, string $type, $override) {
         switch($type) {
 
             default:
-                return false;
+                return;
             break;
 
             case 'RGAME':
@@ -222,6 +271,11 @@ class GameCoreAPI extends PluginBase {
         }
     }
 
+    /**
+     * @param int $gameid
+     * 
+     * @return string|null
+     */
     final public function getGameNameById(int $gameid) : ?string {
         if(isset($this->registeredGames[$gameid])) {
             return $this->registeredGames[$gameid]['name'];
