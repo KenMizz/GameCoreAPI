@@ -49,6 +49,9 @@ class GameCoreAPI extends PluginBase {
     }
 
     public function onDisable() : void {
+        $config = new Config($this->getDataFolder().'money.yml', Config::YAML);
+        $config->setAll($this->playerMoneyData);
+        $config->save();
         $this->getLogger()->warning("GameCoreAPI已关闭");
     }
 
