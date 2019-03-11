@@ -5,11 +5,7 @@ namespace yl13\GameCoreAPI\api;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\level\Level;
 
-use yl13\GameCoreAPI\GameCoreAPI;
-
-class maploader {
-
-    private $plugin;
+class maploader extends API {
 
     private const FAILED_REASON = [
         'GAMEID_NOT_REGISTERED' => '游戏id没有被注册!',
@@ -17,10 +13,6 @@ class maploader {
         'map.exists' => '指定地图已存在',
         'map.unload.failed' => '指定地图卸载失败'
     ];
-
-    public function __construct(GameCoreAPI $plugin) {
-        $this->plugin = $plugin;
-    }
 
     final public function create(int $gameid, String $worldname) : bool {
         /**

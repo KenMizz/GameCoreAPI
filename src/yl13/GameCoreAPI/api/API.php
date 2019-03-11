@@ -26,4 +26,8 @@ class API {
     final public function getMapLoaderAPI() {
         return new maploader($this->plugin);
     }
+
+    final public function getPlugin() {
+        return $this->plugin;
+    }
 }
