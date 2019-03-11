@@ -36,7 +36,7 @@ class EventListener implements Listener {
         if(isset($ChatChannel[$this->plugin->getConfigure('chatchannel', 'default')]['players'][$player->getName()])) {
             unset($ChatChannel[$this->plugin->getConfigure('chatchannel', 'default')]['players'][$player->getName()]);
         }
-        
+        //TODO: 储存金钱数据
         $this->plugin->removePlayerData($this->plugin, $player);
     }
 

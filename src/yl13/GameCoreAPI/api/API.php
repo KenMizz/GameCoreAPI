@@ -27,6 +27,10 @@ class API {
         return new maploader($this->plugin);
     }
 
+    final public function getEconomyAPI() {
+        return new economy($this->plugin);
+    }
+
     final public function getPlugin() {
         return $this->plugin;
     }

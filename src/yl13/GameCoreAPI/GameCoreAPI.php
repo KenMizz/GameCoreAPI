@@ -20,6 +20,7 @@ class GameCoreAPI extends PluginBase {
     private $registeredGames = [];
     private $ChatChannel = [];
     private $playerData = [];
+    private $playerMoneyData = [];
 
     public $api;
 
@@ -124,11 +125,13 @@ class GameCoreAPI extends PluginBase {
             }
             $config = new Config($this->getDataFolder().'money.yml', Config::YAML);
             $moneydata = $config->getAll();
+            $this->playerMoneyData = $config->getAll();
             foreach($moneydata as $key => $value) {
                 $this->playerData[$key]['money'] = $value; 
             }
             if($this->getConfigure('economy', 'auto-save') == true) {
                 $this->getScheduler()->scheduleRepeatingTask(new AutoSaveTask($this), $this->getConfigure('economy', 'auto-save-time'));
+                $this->getLogger()->notice(TF::GREEN."经济系统自动储存金钱已开启");
             }
         }
     }
