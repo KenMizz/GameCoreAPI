@@ -11,7 +11,7 @@ class maploader {
 
     private $plugin;
 
-    const FAILED_REASON = [
+    private const FAILED_REASON = [
         'GAMEID_NOT_REGISTERED' => '游戏id没有被注册!',
         'map.not.exists' => '指定地图不存在',
         'map.exists' => '指定地图已存在',
@@ -50,7 +50,7 @@ class maploader {
             $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 创建".TF::WHITE.$worldname.TF::YELLOW."为游戏地图失败,原因:".TF::WHITE.self::FAILED_REASON['map.not.exists']);
             return false;
         }
-        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."创建".TF::WHITE.$worldname.TF::YELLOW."为游戏地图失败,原因:".TF::WHITE.$this->failedreason['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."创建".TF::WHITE.$worldname.TF::YELLOW."为游戏地图失败,原因:".TF::WHITE.self::FAILED_REASON['GAMEID_NOT_REGISTERED']);
         return false;
     }
 
@@ -111,7 +111,7 @@ class maploader {
             $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['map.not.exists']);
             return false;
         }
-        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.$this->failedreason['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."加载地图".TF::WHITE.$worldname.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['GAMEID_NOT_REGISTERED']);
         return false;
     }
 
