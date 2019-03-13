@@ -52,6 +52,7 @@ class GameCoreAPI extends PluginBase {
         $config = new Config($this->getDataFolder().'money.yml', Config::YAML);
         $config->setAll($this->playerMoneyData);
         $config->save();
+        $this->getLogger()->notice(TF::GREEN."金钱数据已保存");
         $this->getLogger()->warning("GameCoreAPI已关闭");
     }
 
@@ -162,8 +163,10 @@ class GameCoreAPI extends PluginBase {
     /**
      * @param yl13\GameCoreAPI\GameCoreAPI $plugin
      * @param pocketmine\Player $player
+     * 
+     * @return void
      */
-    final public function initPlayerData(GameCoreAPI $plugin, Player $player) {
+    final public function initPlayerData(GameCoreAPI $plugin, Player $player) : void {
         if(!isset($this->playerData[$player->getName()])) {
             $this->playerData[$player->getName()] = array(
                 'chatchannel' => null,
@@ -223,6 +226,39 @@ class GameCoreAPI extends PluginBase {
     }
 
     /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param pocketmine\Player $player
+     * @param int $digit
+     */
+    final public function setPlayerMoneyData(GameCoreAPI $plugin, Player $player, int $digit) : void {
+        $this->playerMoneyData[$player->getName()] = $digit;
+    }
+
+    /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param pocketmine\Player $player
+     * 
+     * @return bool|null
+     */
+    final public function removePlayerMoneyData(GameCoreAPI $plugin, Player $player) : ?bool {
+        if(isset($this->playerMoneyData[$player->getName()])) {
+            unset($this->playerMoneyData[$player->getName()]);
+            return true;
+        }
+        return null;
+    }
+
+    /**
+     * @param yl13\GameCoreAPI\GameCoreAPI $plugin
+     * @param pocketmine\Player
+     * 
+     * @return int|null
+     */
+    final public function getPlayerMoneyData(GameCoreAPI $plugin, Player $player) : ?int {
+        return $this->playerMoneyData[$player->getName()] ?? null;
+    }
+
+    /**
      * @param mixed $key
      * @param mixed $value
      * 
@@ -261,7 +297,7 @@ class GameCoreAPI extends PluginBase {
      * 
      * @return void
      */
-    final public function set(GameCoreAPI $plugin, string $type, $override) {
+    final public function set(GameCoreAPI $plugin, string $type, $override) : void {
         switch($type) {
 
             default:
