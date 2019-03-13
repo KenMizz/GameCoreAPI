@@ -23,7 +23,10 @@ class economy extends API {
     final public function setMoney(int $gameid, Player $player, int $digit) : bool {
         $registeredGame = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
         if(isset($registeredGame[$gameid])) { //小游戏id有效
-            
+            if(parent::getPlugin()->getConfigure('economy', 'enabled')) { //API开启了
+                parent::getPlugin()->setPlayerData(parent::getPlugin(), $player, 'MONEY', $digit);
+                //parent::getPlugin()->getLogger()->notice();
+            }
         }
     }
 }

@@ -16,20 +16,20 @@ class gamecore extends API {
          * optional: String 作者名
          * return: int
          */
-        $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
-        $id = $this->plugin->randnum(8);
+        $registeredGames = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $id = parent::getPlugin()->randnum(8);
         while(isset($registeredGames[$id])) {
-            $id = $this->plugin->randnum(8); 
+            $id = parent::getPlugin()->randnum(8); 
         }
         $registeredGames[$id] = array(
             'name' => $name,
             'author' => $author 
         );
-        $this->plugin->set($this->plugin, 'RGAME', $registeredGames);
+        parent::getPlugin()->set(parent::getPlugin(), 'RGAME', $registeredGames);
         if($author != null) {
-            $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!作者:".TF::WHITE.$author);
+            parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!作者:".TF::WHITE.$author);
         } else {
-            $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!");
+            parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!");
         }
         return $id;
     }
@@ -47,7 +47,7 @@ class gamecore extends API {
          * 检查游戏是否被注册
          * return: bool
          */
-        $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
+        $registeredGames = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
         if(!isset($registeredGames[$id])) {
             return false;
         }
