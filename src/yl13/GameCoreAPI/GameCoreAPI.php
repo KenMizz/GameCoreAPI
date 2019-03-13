@@ -32,7 +32,6 @@ class GameCoreAPI extends PluginBase {
         ),
         'economy' => array(
             'enabled' => true,
-            'money-name' => 'Money',
             'money-max-limit' => 9223372036854775807,
             'auto-save' => true,
             'auto-save-time' => 6000
@@ -109,9 +108,6 @@ class GameCoreAPI extends PluginBase {
         $economy = $config->get('economy');
         if(!is_bool($economy['enabled'])) {
             $economy['enabled'] = true;
-        }
-        if(!is_string($economy['money-name'])) {
-            $economy['money-name'] = 'Money';
         }
         if(!is_int($economy['money-max-limit'])) {
             $economy['money-max-limit'] = PHP_INT_MAX;
