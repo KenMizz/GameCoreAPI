@@ -252,6 +252,8 @@ class GameCoreAPI extends PluginBase {
      * @param yl13\GameCoreAPI\GameCoreAPI $plugin
      * @param pocketmine\Player
      * 
+     * @description 在这里获取的金钱数据不是最新的，想要直接获取就直接获取玩家数据吧
+     * 
      * @return int|null
      */
     final public function getPlayerMoneyData(GameCoreAPI $plugin, Player $player) : ?int {
