@@ -27,7 +27,9 @@ class EventListener implements Listener {
             $ChatChannel[$this->plugin->getConfigure('chatchannel', 'default')]['players'][$player->getName()] = $player;
             $this->plugin->set($this->plugin, 'CHATCHANNEL', $ChatChannel);
             $this->plugin->setPlayerData($this->plugin, $player, 'CHATCHANNEL', $this->plugin->getConfigure('chatchannel', 'default'));
-            $this->plugin->setPlayerData($this->plugin, $player, 'MONEY', $this->plugin->getPlayerMoneyData($this->plugin, $player));
+            if($this->plugin->getConfigure('economy', 'enabled')) {
+                $this->plugin->setPlayerData($this->plugin, $player, 'MONEY', $this->plugin->getPlayerMoneyData($this->plugin, $player));
+            }
         }
     }
 
@@ -37,8 +39,10 @@ class EventListener implements Listener {
         if(isset($ChatChannel[$this->plugin->getConfigure('chatchannel', 'default')]['players'][$player->getName()])) {
             unset($ChatChannel[$this->plugin->getConfigure('chatchannel', 'default')]['players'][$player->getName()]);
         }
-        $data = $this->plugin->getPlayerData($this->plugin, $player);
-        $this->plugin->setPlayerMoneyData($this->plugin, $player, $data['money']);
+        $playerData = $this->plugin->getPlayerData($this->plugin, $player);
+        if($this->plugin->getConfigure('economy', 'enabled')) {
+            $this->plugin->setPlayerMoneyData($this->plugin, $player, $playerData['money']);
+        }
         $this->plugin->removePlayerData($this->plugin, $player);
     }
 
