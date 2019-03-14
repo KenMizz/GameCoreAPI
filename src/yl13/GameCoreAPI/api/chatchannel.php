@@ -174,7 +174,7 @@ class chatchannel extends API {
         return false;
     }
 
-    final public function setMute(int $gameid, String $name, boolean $options) : bool {
+    final public function setMute(int $gameid, String $name, bool $options = true) : bool {
         /**
          * 设置聊天频道禁言
          * require: int 小游戏id, String 聊天频道名, boolean 开/关禁言
