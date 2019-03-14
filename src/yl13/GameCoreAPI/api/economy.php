@@ -12,7 +12,7 @@ class economy extends API {
 
     private const FAILED_REASON = [
         'API_DISABLED' => 'api没有被启用',
-        ''
+        'MONEY_MAX_LIMIT' => '已超过配置文件的最大数值限制'
     ];
 
     /**
@@ -32,7 +32,8 @@ class economy extends API {
                     parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 设置玩家金钱".TF::GREEN."成功");
                     return true;
                 }
-                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW."设置玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['API_DISABLED']);
+                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW."设置玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['MONEY_MAX_LIMIT']);
+                return false;
             }
             parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW."设置玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['API_DISABLED']);
             return false;
@@ -55,9 +56,17 @@ class economy extends API {
             if(parent::getPlugin()->getConfigure('economy', 'enabled')) {
                 $playerData = parent::getPlugin()->getPlayerMoneyData(parent::getPlugin(), $player);
                 if(!$playerData['money'] + $digit >= parent::getPlugin()->getConfigure('economy', 'money-max-limit')) {
-                    //parent::getPlugin()-
+                    parent::getPlugin()->setPlayerData(parent::getPlugin(), $player, 'MONEY', $playerData['money'] + $digit);
+                    parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 添加玩家金钱".TF::GREEN."成功");
+                    return true;
                 }
+                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW."添加玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['MONEY_MAX_LIMIT']);
+                return false;
             }
+            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW."添加玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['API_DISABLED']);
+            return false;
         }
+        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."设置玩家金钱".TF::YELLOW."失败，原因:".TF::WHITE.self::FAILED_REASON['GAMEID_NOT_REGISTERED']);
+        return false;
     }
 }
