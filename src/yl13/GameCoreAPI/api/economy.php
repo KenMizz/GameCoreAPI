@@ -66,7 +66,7 @@ class economy extends API {
             parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW."添加玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['API_DISABLED']);
             return false;
         }
-        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."设置玩家金钱".TF::YELLOW."失败，原因:".TF::WHITE.self::FAILED_REASON['GAMEID_NOT_REGISTERED']);
+        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."添加玩家金钱".TF::YELLOW."失败，原因:".TF::WHITE.self::FAILED_REASON['GAMEID_NOT_REGISTERED']);
         return false;
     }
 }
