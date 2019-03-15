@@ -28,7 +28,9 @@ class EventListener implements Listener {
             $this->plugin->set($this->plugin, 'CHATCHANNEL', $ChatChannel);
             $this->plugin->setPlayerData($this->plugin, $player, 'CHATCHANNEL', $this->plugin->getConfigure('chatchannel', 'default'));
             if($this->plugin->getConfigure('economy', 'enabled')) {
-                $this->plugin->setPlayerData($this->plugin, $player, 'MONEY', $this->plugin->getPlayerMoneyData($this->plugin, $player));
+                if(!is_null($this->plugin->getPlayerMoneyData($this->plugin, $player))) {
+                    $this->plugin->setPlayerData($this->plugin, $player, 'MONEY', $this->plugin->getPlayerMoneyData($this->plugin, $player));
+                }
             }
         }
     }
