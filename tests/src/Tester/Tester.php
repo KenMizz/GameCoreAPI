@@ -26,6 +26,7 @@ class Tester extends PluginBase {
                     return false;
                 break;
 
+                //ChatChannel
                 case 'r':
                     $this->id = GameCoreAPI::getInstance()->api->getGameCoreAPI()->registerGame("Tester");
                     return true;
@@ -49,7 +50,23 @@ class Tester extends PluginBase {
 
                 case 'mute':
                     GameCoreAPI::getInstance()->api->getChatChannelAPI()->setMute($this->id, 'Tester', true);
+                    return true;
                 break;
+                //End
+
+                case 'getm':
+                    GameCoreAPI::getInstance()->api->getEconomyAPI()->getMoney($this->id, $sender);
+                    return true;
+                break;
+
+                case 'addm':
+                    GameCoreAPI::getInstance()->api->getEconomyAPI()->addMoney($this->id, $sender, $args[1]);
+                    return true;
+                break;
+
+                case 'reducem':
+                    GameCoreAPI::getInstance()->api->getEconomyAPI()->reduceMoney($this->id, $sender, $args[1]);
+                    return true;
             }
         }
     }
