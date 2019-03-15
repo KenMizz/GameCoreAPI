@@ -17,7 +17,7 @@ class AutoSaveTask extends Task {
 
     public function onRun(int $tick) {
         $this->plugin->getLogger()->notice(TF::YELLOW."玩家金钱数据储存中。。");
-        $config = new Config($this->getDataFolder().'money.yml', Config::YAML);
+        $config = new Config($this->plugin->getDataFolder().'money.yml', Config::YAML);
         foreach($this->plugin->getServer()->getOnlinePlayers() as $player) {
             $config->set($player->getName(), $this->plugin->getPlayerMoneyData($this->plugin, $player));
         }
