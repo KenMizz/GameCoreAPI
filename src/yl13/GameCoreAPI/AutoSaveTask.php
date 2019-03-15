@@ -22,6 +22,6 @@ class AutoSaveTask extends Task {
             $config->set($player->getName(), $this->plugin->getPlayerMoneyData($this->plugin, $player));
         }
         $config->save();
-        $this->plugin->getLogger()->notice(TF::GREEN."玩家金钱数据储存成功！);
+        $this->plugin->getLogger()->notice(TF::GREEN."玩家金钱数据储存成功！");
     }
 }
