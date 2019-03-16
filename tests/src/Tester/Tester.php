@@ -15,6 +15,10 @@ class Tester extends PluginBase {
 
     private $id = null;
 
+    public function onEnable() {
+        $this->id = GameCoreAPI::getInstance()->api->getGameCoreAPI()->registerGame("Tester");
+    }
+
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool {
         if($command->getName() == 'rtp') {
             if(!isset($args[0])) {
@@ -27,11 +31,6 @@ class Tester extends PluginBase {
                 break;
 
                 //ChatChannel
-                case 'r':
-                    $this->id = GameCoreAPI::getInstance()->api->getGameCoreAPI()->registerGame("Tester");
-                    return true;
-                break;
-
                 case 'c':
                     GameCoreAPI::getInstance()->api->getChatChannelAPI()->create($this->id, 'Tester');
                     GameCoreAPI::getInstance()->api->getChatChannelAPI()->setFormat($this->id, "Tester", "{PLAYER_NAME} MESSAGE");
@@ -55,17 +54,21 @@ class Tester extends PluginBase {
                 //End
 
                 case 'getm':
-                    GameCoreAPI::getInstance()->api->getEconomyAPI()->getMoney($this->id, $sender);
+                    $sender->sendMessage('You have:'.GameCoreAPI::getInstance()->api->getEconomyAPI()->getMoney($this->id, $sender));
                     return true;
                 break;
 
                 case 'addm':
-                    GameCoreAPI::getInstance()->api->getEconomyAPI()->addMoney($this->id, $sender, $args[1]);
+                    $sender->sendMessage('add '.$args[1]);
+                    $result = GameCoreAPI::getInstance()->api->getEconomyAPI()->addMoney($this->id, $sender, (int)$args[1]);
+                    var_dump($result);
                     return true;
                 break;
 
                 case 'reducem':
-                    GameCoreAPI::getInstance()->api->getEconomyAPI()->reduceMoney($this->id, $sender, $args[1]);
+                    $sender->sendMessage('remove '.$args[1]);
+                    $result = GameCoreAPI::getInstance()->api->getEconomyAPI()->reduceMoney($this->id, $sender, (int)$args[1]);
+                    var_dump($result);
                     return true;
             }
         }

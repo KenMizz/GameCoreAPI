@@ -56,15 +56,15 @@ class economy extends API {
         if(isset($registeredGame[$gameid])) { //小游戏id有效
             if(parent::getPlugin()->getConfigure('economy', 'enabled')) {
                 $playerData = parent::getPlugin()->getPlayerData(parent::getPlugin(), $player);
-                if(!$playerData['money'] + $digit >= parent::getPlugin()->getConfigure('economy', 'money-max-limit')) {
+                if(!($playerData['money'] + $digit >= parent::getPlugin()->getConfigure('economy', 'money-max-limit'))) {
                     parent::getPlugin()->setPlayerData(parent::getPlugin(), $player, 'MONEY', $playerData['money'] + $digit);
                     parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 添加玩家金钱".TF::GREEN."成功");
                     return true;
                 }
-                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW."添加玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['MONEY_MAX_LIMIT']);
+                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 添加玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['MONEY_MAX_LIMIT']);
                 return false;
             }
-            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW."添加玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['API_DISABLED']);
+            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 添加玩家金钱失败，原因:".TF::WHITE.self::FAILED_REASON['API_DISABLED']);
             return false;
         }
         parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."添加玩家金钱".TF::YELLOW."失败，原因:".TF::WHITE.self::FAILED_REASON['GAMEID_NOT_REGISTERED']);
@@ -84,7 +84,7 @@ class economy extends API {
         if(isset($registeredGame[$gameid])) { //小游戏id有效
             if(parent::getPlugin()->getConfigure('economy', 'enabled')) {
                 $playerData = parent::getPlugin()->getPlayerData(parent::getPlugin(), $player);
-                if(!$playerData['money'] - $digit < 0) {
+                if(!($playerData['money'] - $digit < 0)) {
                     parent::getPlugin()->setPlayerData(parent::getPlugin(), $player, 'MONEY', $playerData['money'] - $digit);
                     parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 减少玩家金钱".TF::GREEN."成功");
                     return true;

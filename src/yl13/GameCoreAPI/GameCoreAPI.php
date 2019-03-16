@@ -193,6 +193,7 @@ class GameCoreAPI extends PluginBase {
 
                 case 'MONEY':
                     $this->playerData[$player->getName()]['money'] = $value;
+                    return true;
             }
         }
     }
