@@ -3,7 +3,6 @@
 namespace yl14\GameCoreAPI;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\TextFormat;
 
 class GameCoreAPI extends PluginBase {
 
