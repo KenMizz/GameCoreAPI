@@ -11,27 +11,29 @@ class API {
 
     private $plugin;
 
+    private $gamecore, $chatchannel, $maploader, $economy;
+
     public function __construct(GameCoreAPI $plugin) {
         $this->plugin = $plugin;
+        $this->gamecore = new gamecore($this->plugin);
+        $this->chatchannel = new chatchannel($this->plugin);
+        $this->maploader = new maploader($this->plugin);
+        $this->economy = new economy($this->plugin);
     }
 
     final public function getGameCoreAPI() {
-        return new gamecore($this->plugin);
+        return $this->gamecore;
     }
 
     final public function getChatChannelAPI() {
-        return new chatchannel($this->plugin);
+        return $this->chatchannel;
     }
 
     final public function getMapLoaderAPI() {
-        return new maploader($this->plugin);
+        return $this->maploader;
     }
 
     final public function getEconomyAPI() {
-        return new economy($this->plugin);
-    }
-
-    final public function getPlugin() {
-        return $this->plugin;
+        return $this->maploader;
     }
 }

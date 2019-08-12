@@ -7,7 +7,13 @@ namespace yl13\GameCoreAPI\api;
 use pocketmine\utils\TextFormat as TF;
 
 
-class gamecore extends API {
+class gamecore {
+
+    private $plugin;
+
+    public function __construct(\yl13\GameCoreAPI\GameCoreAPI $plugin) {
+        $this->plugin = $plugin;
+    }
     
     final public function registerGame(String $name, String $author = null) : int {
         /**
@@ -16,20 +22,20 @@ class gamecore extends API {
          * optional: String 作者名
          * return: int
          */
-        $registeredGames = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
-        $id = parent::getPlugin()->randnum(8);
+        $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
+        $id = $this->plugin->randnum(8);
         while(isset($registeredGames[$id])) {
-            $id = parent::getPlugin()->randnum(8); 
+            $id = $this->plugin->randnum(8); 
         }
         $registeredGames[$id] = array(
             'name' => $name,
             'author' => $author 
         );
-        parent::getPlugin()->set(parent::getPlugin(), 'RGAME', $registeredGames);
+        $this->plugin->set($this->plugin, 'RGAME', $registeredGames);
         if($author != null) {
-            parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!作者:".TF::WHITE.$author);
+            $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!作者:".TF::WHITE.$author);
         } else {
-            parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!");
+            $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$name.TF::GREEN." 注册成功!");
         }
         return $id;
     }
@@ -47,7 +53,7 @@ class gamecore extends API {
          * 检查游戏是否被注册
          * return: bool
          */
-        $registeredGames = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
         if(!isset($registeredGames[$id])) {
             return false;
         }

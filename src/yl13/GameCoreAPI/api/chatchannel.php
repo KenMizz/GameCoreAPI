@@ -7,7 +7,9 @@ namespace yl13\GameCoreAPI\api;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
-class chatchannel extends API {
+class chatchannel {
+
+    private $plugin;
 
     private const FAILED_REASON = [
         'GAMEID_NOT_REGISTERED' => '游戏id没有被注册!',
@@ -17,16 +19,20 @@ class chatchannel extends API {
         'API_DISABLED' => 'api没有被启用'
     ];
 
+    public function __construct(\yl13\GameCoreAPI\GameCoreAPI $plugin) {
+        $this->plugin = $plugin;
+    }
+
     final public function create(int $gameid, String $name) : bool {
         /**
          * 创建聊天频道
          * require: int 小游戏id, String 聊天频道名
          * return: bool
          */
-        $registeredGames = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
         if(isset($registeredGames[$gameid])) {
-            $ChatChannel = parent::getPlugin()->get(parent::getPlugin(), 'CHATCHANNEL');
-            if(parent::getPlugin()->getConfigure('chatchannel', 'enabled')) {
+            $ChatChannel = $this->plugin->get($this->plugin, 'CHATCHANNEL');
+            if($this->plugin->getConfigure('chatchannel', 'enabled')) {
                 if(!isset($ChatChannel[$name])) {
                     $ChatChannel[$name] = array(
                         'id' => $gameid,
@@ -34,17 +40,17 @@ class chatchannel extends API {
                         'players' => [],
                         'mute' => false
                     );
-                    parent::getPlugin()->set(parent::getPlugin(), 'CHATCHANNEL', $ChatChannel);
-                    parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 创建聊天频道".TF::WHITE.$name.TF::GREEN."成功");
+                    $this->plugin->set($this->plugin, 'CHATCHANNEL', $ChatChannel);
+                    $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 创建聊天频道".TF::WHITE.$name.TF::GREEN."成功");
                     return true;
                 }
-                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['NAME_EXISTED']);
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['NAME_EXISTED']);
                 return false;
             }
-            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
             return false;
         }
-        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::FAILED_REASON['GAMEID_NOT_REGISTERED']);
         return false;
     }
 
@@ -57,27 +63,27 @@ class chatchannel extends API {
          * PLAYER_NAME 玩家名
          * MESSAGE 玩家信息
          */
-        $registeredGames = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $registeredGames = $this->plugin->get($this->plugin, 'RGAME');
         if(isset($registeredGames[$gameid])) {
-            $ChatChannel = parent::getPlugin()->get(parent::getPlugin(), 'CHATCHANNEL');
-            if(parent::getPlugin()->getConfigure('chatchannel', 'enabled')) {
+            $ChatChannel = $this->plugin->get($this->plugin, 'CHATCHANNEL');
+            if($this->plugin->getConfigure('chatchannel', 'enabled')) {
                 if(isset($ChatChannel[$name])) {
                     if($ChatChannel[$name]['id'] == $gameid) {
                         $ChatChannel[$name]['format'] = $format;
-                        parent::getPlugin()->set(parent::getPlugin(), 'CHATCHANNEL', $ChatChannel);
-                        parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 设置聊天频道格式".TF::WHITE.$name.TF::GREEN."成功");
+                        $this->plugin->set($this->plugin, 'CHATCHANNEL', $ChatChannel);
+                        $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 设置聊天频道格式".TF::WHITE.$name.TF::GREEN."成功");
                         return true;
                     }
-                    parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 设置聊天频道格式".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 设置聊天频道格式".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
                     return false;
                 }
-                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 设置聊天频道格式".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['NAME_NOT_EXISTED']);
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 设置聊天频道格式".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['NAME_NOT_EXISTED']);
                 return false;
             }
-            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 设置聊天频道格式".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 设置聊天频道格式".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
             return false;
         }
-        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."设置聊天频道格式".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."设置聊天频道格式".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
         return false;
     }
 
@@ -87,10 +93,10 @@ class chatchannel extends API {
          * require int 小游戏id, String 聊天频道名, \pocketmine\Player Array 玩家
          * return: bool
          */
-        $registeredGame = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $registeredGame = $this->plugin->get($this->plugin, 'RGAME');
         if(isset($registeredGame[$gameid])) {
-            $ChatChannel = parent::getPlugin()->get(parent::getPlugin(), 'CHATCHANNEL');
-            if(parent::getPlugin()->getConfigure('chatchannel', 'enabled')) {
+            $ChatChannel = $this->plugin->get($this->plugin, 'CHATCHANNEL');
+            if($this->plugin->getConfigure('chatchannel', 'enabled')) {
                 if(isset($ChatChannel[$name])) {
                     $unsuccess = 0;
                     $success = 0;
@@ -99,7 +105,7 @@ class chatchannel extends API {
                             if($player->isOnline()) {
                                 if(!isset($ChatChannel[$name]['players'][$player->getName()])) {
                                     $ChatChannel[$name]['players'][$player->getName()] = $player;
-                                    parent::getPlugin()->setPlayerData(parent::getPlugin(), $player, 'CHATCHANNEL', $name);
+                                    $this->plugin->setPlayerData($this->plugin, $player, 'CHATCHANNEL', $name);
                                     $success++;
                                 } else {
                                     $unsuccess++;
@@ -111,17 +117,17 @@ class chatchannel extends API {
                             $unsuccess++;
                         }
                     }
-                    parent::getPlugin()->set(parent::getPlugin(), 'CHATCHANNEL', $ChatChannel);
-                    parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 添加玩家至聊天频道".TF::WHITE.$name.TF::GREEN."成功,成功添加:".TF::WHITE.$success.TF::GREEN."个,添加失败:".TF::WHITE.$unsuccess.TF::GREEN."个");
+                    $this->plugin->set($this->plugin, 'CHATCHANNEL', $ChatChannel);
+                    $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 添加玩家至聊天频道".TF::WHITE.$name.TF::GREEN."成功,成功添加:".TF::WHITE.$success.TF::GREEN."个,添加失败:".TF::WHITE.$unsuccess.TF::GREEN."个");
                     return true;
                 }
-                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 添加玩家至聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['NAME_NOT_EXISTED']);
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 添加玩家至聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['NAME_NOT_EXISTED']);
                 return false;
             }
-            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 添加玩家至聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 添加玩家至聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
             return false;
         }
-        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."添加玩家至聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."添加玩家至聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
         return false;
     }
 
@@ -132,10 +138,10 @@ class chatchannel extends API {
          * return: bool
          * 只允许移除自己创建的聊天频道内的玩家
          */
-        $registeredGame = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $registeredGame = $this->plugin->get($this->plugin, 'RGAME');
         if(isset($registeredGame[$gameid])) {
-            $ChatChannel = parent::getPlugin()->get(parent::getPlugin(), 'CHATCHANNEL');
-            if(parent::getPlugin()->getConfigure('chatchannel', 'enabled')) {
+            $ChatChannel = $this->plugin->get($this->plugin, 'CHATCHANNEL');
+            if($this->plugin->getConfigure('chatchannel', 'enabled')) {
                 if(isset($ChatChannel[$name])) {
                     if($ChatChannel[$name]['id'] == $gameid) {
                         $unsuccess = 0;
@@ -145,7 +151,7 @@ class chatchannel extends API {
                                 if($player->isOnline()) {
                                     if(isset($ChatChannel[$name]['players'][$player->getName()])) {
                                         unset($ChatChannel[$name]['players'][$player->getName()]);
-                                        parent::getPlugin()->setPlayerData(parent::getPlugin(), $player, 'CHATCHANNEL', null);
+                                        $this->plugin->setPlayerData($this->plugin, $player, 'CHATCHANNEL', null);
                                         $success++;
                                     } else {
                                         $unsuccess++;
@@ -157,20 +163,20 @@ class chatchannel extends API {
                                 $unsuccess++;
                             }
                         }
-                        parent::getPlugin()->set(parent::getPlugin(), 'CHATCHANNEL', $ChatChannel);
-                        parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 从聊天频道".TF::WHITE.$name.TF::GREEN."移除玩家成功,成功移除:".TF::WHITE.$success.TF::GREEN."个,移除失败:".TF::WHITE.$unsuccess.TF::GREEN."个");
+                        $this->plugin->set($this->plugin, 'CHATCHANNEL', $ChatChannel);
+                        $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 从聊天频道".TF::WHITE.$name.TF::GREEN."移除玩家成功,成功移除:".TF::WHITE.$success.TF::GREEN."个,移除失败:".TF::WHITE.$unsuccess.TF::GREEN."个");
                         return true;
                     }
-                    parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 从聊天频道".TF::WHITE.$name.TF::YELLOW."移除玩家失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 从聊天频道".TF::WHITE.$name.TF::YELLOW."移除玩家失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
                     return false;
                 }
-                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 从聊天频道".TF::WHITE.$name.TF::YELLOW."移除玩家失败,原因:".TF::WHITE.self::failedreason['NAME_NOT_EXISTED']);
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 从聊天频道".TF::WHITE.$name.TF::YELLOW."移除玩家失败,原因:".TF::WHITE.self::failedreason['NAME_NOT_EXISTED']);
                 return false;
             }
-            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 从聊天频道".TF::WHITE.$name.TF::YELLOW."移除玩家失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 从聊天频道".TF::WHITE.$name.TF::YELLOW."移除玩家失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
             return false;
         }
-        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."从聊天频道".TF::WHITE.$name.TF::YELLOW."移除玩家失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."从聊天频道".TF::WHITE.$name.TF::YELLOW."移除玩家失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
         return false;
     }
 
@@ -181,27 +187,27 @@ class chatchannel extends API {
          * return: bool
          * 只允许给自己创建的聊天频道设置禁言 
          */
-        $registeredGame = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $registeredGame = $this->plugin->get($this->plugin, 'RGAME');
         if(isset($registeredGame[$gameid])) {
-            $ChatChannel = parent::getPlugin()->get(parent::getPlugin(), 'CHATCHANNEL');
-            if(parent::getPlugin()->getConfigure('chatchannel', 'enabled')) {
+            $ChatChannel = $this->plugin->get($this->plugin, 'CHATCHANNEL');
+            if($this->plugin->getConfigure('chatchannel', 'enabled')) {
                 if(isset($ChatChannel[$name])) {
                     if($ChatChannel[$name]['id'] == $gameid) {
                         $ChatChannel[$name]['mute'] = $options;
-                        parent::getPlugin()->set(parent::getPlugin(), 'CHATCHANNEL', $ChatChannel);
-                        parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 设置聊天频道禁言".TF::WHITE.$name.TF::GREEN."成功,当前状态:".TF::WHITE.$options);
+                        $this->plugin->set($this->plugin, 'CHATCHANNEL', $ChatChannel);
+                        $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 设置聊天频道禁言".TF::WHITE.$name.TF::GREEN."成功,当前状态:".TF::WHITE.$options);
                         return true;
                     }
-                    parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 设置聊天频道禁言".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 设置聊天频道禁言".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
                     return false;
                 }
-                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 设置聊天频道禁言".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['NAME_NOT_EXISTED']);
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 设置聊天频道禁言".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['NAME_NOT_EXISTED']);
                 return false;
             }
-            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 设置聊天频道禁言".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 设置聊天频道禁言".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
             return false;
         }
-        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."设置聊天频道禁言".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."设置聊天频道禁言".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
         return false;
     }
 
@@ -211,23 +217,23 @@ class chatchannel extends API {
          * require: int 小游戏id, String 聊天频道名, String 聊天信息
          * return: bool
          */
-        $registeredGame = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $registeredGame = $this->plugin->get($this->plugin, 'RGAME');
         if(isset($registeredGame[$gameid])) {
-            $ChatChannel = parent::getPlugin()->get(parent::getPlugin(), 'CHATCHANNEL');
-            if(parent::getPlugin()->getConfigure('chatchannel', 'enabled')) {
+            $ChatChannel = $this->plugin->get($this->plugin, 'CHATCHANNEL');
+            if($this->plugin->getConfigure('chatchannel', 'enabled')) {
                 if($ChatChannel[$name]['id'] == $gameid) {
                     $Players = $ChatChannel[$name]['players'];
-                    parent::getPlugin()->getServer()->broadcastMessage($message, $Players);
-                    parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 发送全局信息到".TF::WHITE.$name.TF::GREEN."成功");
+                    $this->plugin->getServer()->broadcastMessage($message, $Players);
+                    $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 发送全局信息到".TF::WHITE.$name.TF::GREEN."成功");
                     return true;
                 }
-                parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
+                $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
                 return false;
             }
-            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
             return false;
         }
-        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."发送全局信息到".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
         return false;
     }
 
@@ -238,10 +244,10 @@ class chatchannel extends API {
          * return: bool
          * 只允许移除自己创建的聊天频道
          */
-        $registeredGame = parent::getPlugin()->get(parent::getPlugin(), 'RGAME');
+        $registeredGame = $this->plugin->get($this->plugin, 'RGAME');
         if(isset($registeredGame[$gameid])) {
-            $ChatChannel = parent::getPlugin()->get(parent::getPlugin(), 'CHATCHANNEL');
-            if(parent::getPlugin()->getConfigure('chatchannel', 'enabled')) {
+            $ChatChannel = $this->plugin->get($this->plugin, 'CHATCHANNEL');
+            if($this->plugin->getConfigure('chatchannel', 'enabled')) {
                 if(isset($ChatChannel[$name])) {
                     if($ChatChannel[$name]['id'] == $gameid) {
                         $players = $ChatChannel[$name]['players'];
@@ -249,23 +255,23 @@ class chatchannel extends API {
                             if($player instanceof Player) {
                                 if($player->isOnline()) {
                                     unset($ChatChannel[$name]['players'][$player->getName()]);
-                                    parent::getPlugin()->setPlayerData(parent::getPlugin(), $player, 'CHATCHANNEL', null);
+                                    $this->plugin->setPlayerData($this->plugin, $player, 'CHATCHANNEL', null);
                                 }
                             }
                         }
                         unset($ChatChannel[$name]);
-                        parent::getPlugin()->set(parent::getPlugin(), 'CHATCHANNEL', $ChatChannel);
-                        parent::getPlugin()->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::GREEN." 移除聊天频道".TF::WHITE.$name.TF::GREEN."成功");
+                        $this->plugin->set($this->plugin, 'CHATCHANNEL', $ChatChannel);
+                        $this->plugin->getLogger()->notice(TF::GREEN."小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::GREEN." 移除聊天频道".TF::WHITE.$name.TF::GREEN."成功");
                         return true;
                     }
-                    parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
+                    $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['CHATCHANNEL_NOT_OWNED']);
                     return false;
                 }
             }
-            parent::getPlugin()->getLogger()->warning("小游戏 ".TF::WHITE.parent::getPlugin()->getGameNameById($gameid).TF::YELLOW." 创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
+            $this->plugin->getLogger()->warning("小游戏 ".TF::WHITE.$this->plugin->getGameNameById($gameid).TF::YELLOW." 创建聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['API_DISABLED']);
             return false;
         }
-        parent::getPlugin()->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."移除聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
+        $this->plugin->getLogger()->warning("游戏id:".TF::WHITE.$gameid.TF::YELLOW."移除聊天频道".TF::WHITE.$name.TF::YELLOW."失败,原因:".TF::WHITE.self::failedreason['GAMEID_NOT_REGISTERED']);
         return false;
     }
 }
