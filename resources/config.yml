@@ -1,3 +1,8 @@
-#GameCoreAPI Configure(配置)
+#GameCoreAPI配置
 
-language: zh
+chatchannel:
+  enabled: true
+  default: null
+
+maploader:
+  enabled: true
