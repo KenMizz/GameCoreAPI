@@ -1,5 +1,6 @@
 name: GameCoreAPI
 version: 2.0.0
+author: 游乐14
 main: yl14\GameCoreAPI\GameCoreAPI
 load: STARTUP
 api:
