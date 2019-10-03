@@ -6,6 +6,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\{
     TextFormat as TF, Config
 };
+use yl14\GameCoreAPI\api\API;
 
 class GameCoreAPI extends PluginBase {
 
@@ -29,6 +30,14 @@ class GameCoreAPI extends PluginBase {
 
     public function onDisable() {
         $this->getLogger()->warning("GameCoreAPI已关闭...");
+    }
+
+    public static function getInstance() : GameCoreAPI {
+        return self::$instance;
+    }
+
+    public function getAPI() : API {
+        return $this->api;
     }
 
     private function initPlugin() {
