@@ -1,0 +1,14 @@
+name: GameCoreAPITester
+author: 游乐14
+main: Tester\Tester
+version: 1.0.0
+api:
+  - 3.9.5
+commands:
+  gtest:
+    permission: gtest.op
+    description: GameCoreAPITest
+
+permissions:
+  gtest.op:
+    default: op
