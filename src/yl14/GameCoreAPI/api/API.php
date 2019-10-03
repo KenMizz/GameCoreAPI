@@ -1,8 +1,10 @@
 <?php
 
-namespace yl14\GameCoreAPI;
+namespace yl14\GameCoreAPI\api;
 
-use yl14\GameCoreAPI\api\GameCore;
+use yl14\GameCoreAPI\{
+    GameCoreAPI, api\GameCore
+};
 
 class API {
 

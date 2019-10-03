@@ -1,6 +1,6 @@
 <?php
 
-namespace yl14\GameCoreAPI;
+namespace yl14\GameCoreAPI\utils;
 
 class utils {
 
