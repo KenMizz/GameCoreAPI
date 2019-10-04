@@ -22,7 +22,7 @@ class GameCore {
      * @param String[] $name 小游戏名
      * @param String[] $author 作者名
      * 
-     * @return String|null 如果注册成功将会返回
+     * @return String|null 如果注册成功将会返回小游戏id，反之返回NULL
      */
     public function registerGame(string $name, array $author = []) : ?string {
         if(!isset($this->Games['name'])) {
@@ -43,5 +43,16 @@ class GameCore {
             return $id;
         }
         return null;
+    }
+
+    /**
+     * 获取GameCoreAPI版本
+     * 
+     * @method string getGameCoreAPIVersion()
+     * 
+     * @return String
+     */
+    public function getGameCoreAPIVersion() : string {
+        return $this->plugin->getDescription()->getVersion();
     }
 }

@@ -14,7 +14,7 @@ class Tester extends PluginBase {
     public $gid = "";
 
     public function onEnable() {
-        $this->gid = GameCoreAPI::getInstance()->getAPI()->getGameCore()->registerGame("GameCoreAPITester", array("游乐14"));
+        $this->gid = GameCoreAPI::getInstance()->getAPI()->getGameCore()->registerGame("GameCoreAPITester", array("游乐14", "游乐13", "游乐12", "KenMizz"));
         echo $this->gid . PHP_EOL;
     }
 }
