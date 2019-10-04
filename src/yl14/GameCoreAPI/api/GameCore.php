@@ -35,9 +35,7 @@ class GameCore {
             }
             $this->Games[$name] = array(
                 'id' => $id,
-                'author' => $author,
-                'chatchannel' => array(),
-                'maps' => array()
+                'author' => $author
             );
             $this->plugin->getLogger()->notice(TF::GREEN . '小游戏 ' . TF::WHITE . $name . TF::GREEN . ' 注册成功！作者: ' . TF::WHITE . implode(",", $author));
             return $id;
