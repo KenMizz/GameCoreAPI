@@ -53,4 +53,41 @@ class GameCore {
     public function getGameCoreAPIVersion() : string {
         return $this->plugin->getDescription()->getVersion();
     }
+
+    /**
+     * 游戏id是否有效
+     * 
+     * @method bool isIdValid
+     * 
+     * @param yl14\GameCoreAPI\GameCoreAPI $GameCoreAPI
+     * @param Integer $gameid 小游戏id
+     * 
+     * @return Boolean 是否有效
+     */
+    public function isIdValid(GameCoreAPI $GameCoreAPI, int $gameid) : bool {
+        foreach($this->Games as $key => $value) {
+            if($value['id'] == $gameid) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 通过id获取小游戏名
+     * 
+     * @method ?string getGameNameById(int $gameid)
+     * 
+     * @param Integer $gameid 小游戏id
+     * 
+     * @return String|Null
+     */
+    public function getGameNameById(int $gameid) : ?string {
+        foreach($this->Games as $key => $value) {
+            if($value['id'] == $gameid) {
+                return $key;
+            }
+        }
+        return null;
+    }
 }
