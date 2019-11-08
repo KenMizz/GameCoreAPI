@@ -64,7 +64,7 @@ class GameCore {
      * 
      * @return Boolean 是否有效
      */
-    public function isIdValid(GameCoreAPI $GameCoreAPI, int $gameid) : bool {
+    public function isIdValid(GameCoreAPI $GameCoreAPI, string $gameid) : bool {
         foreach($this->Games as $key => $value) {
             if($value['id'] == $gameid) {
                 return true;
