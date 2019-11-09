@@ -50,7 +50,7 @@ class ChatChannel {
                     'mute' => false,
                     'chatformat' => $chatformat
                 );
-                $usage = str_replace(['%gamename%', '%channelname'], [$this->plugin->getAPI()->getGameCore()->getGameNameById($gameid), $channelname], self::USAGE['usage.chatchannel.create']);
+                $usage = str_replace(['%gamename%', '%channelname%'], [$this->plugin->getAPI()->getGameCore()->getGameNameById($gameid), $channelname], self::USAGE['usage.chatchannel.create']);
                 $this->plugin->getLogger()->notice((new TextContainer($usage))->convertColor());
                 return true;
             }
