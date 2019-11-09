@@ -15,6 +15,6 @@ class Tester extends PluginBase {
 
     public function onEnable() {
         $this->gid = GameCoreAPI::getInstance()->getAPI()->getGameCore()->registerGame("GameCoreAPITester", array("游乐14", "游乐13", "游乐12", "KenMizz"));
-        echo $this->gid . PHP_EOL;
+        echo GameCoreAPI::getInstance()->getAPI()->getChatChannel()->create($this->gid, 'Tester');
     }
 }

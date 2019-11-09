@@ -3,7 +3,7 @@ author: 游乐14
 main: Tester\Tester
 version: 1.0.0
 api:
-  - 3.9.5
+  - 3.9.7
 commands:
   gtest:
     permission: gtest.op
