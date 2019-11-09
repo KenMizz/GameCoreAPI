@@ -57,7 +57,7 @@ class GameCore {
     /**
      * 游戏id是否有效
      * 
-     * @method bool isIdValid
+     * @method bool isIdValid(GameCoreAPI $GameCoreAPI, string $gameid)
      * 
      * @param yl14\GameCoreAPI\GameCoreAPI $GameCoreAPI
      * @param Integer $gameid 小游戏id
@@ -76,13 +76,13 @@ class GameCore {
     /**
      * 通过id获取小游戏名
      * 
-     * @method ?string getGameNameById(int $gameid)
+     * @method ?string getGameNameById(string $gameid)
      * 
      * @param Integer $gameid 小游戏id
      * 
      * @return String|Null
      */
-    public function getGameNameById(int $gameid) : ?string {
+    public function getGameNameById(string $gameid) : ?string {
         foreach($this->Games as $key => $value) {
             if($value['id'] == $gameid) {
                 return $key;
