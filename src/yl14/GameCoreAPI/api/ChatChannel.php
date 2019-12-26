@@ -5,6 +5,7 @@ namespace yl14\GameCoreAPI\api;
 use yl14\GameCoreAPI\{
     GameCoreAPI, utils\TextContainer
 };
+use yl14\GameCoreAPI\utils\ChatChannel as UtilsChatChannel;
 
 class ChatChannel {
 
@@ -44,12 +45,7 @@ class ChatChannel {
                 $this->channels[$gameid] = array();
             }
             if(!isset($this->channels[$gameid][$channelname])) {
-                $this->channels[$gameid][$channelname] = array(
-                    'name' => $channelname,
-                    'players' => array(),
-                    'mute' => false,
-                    'chatformat' => $chatformat
-                );
+                $this->channels[$gameid][$channelname] = new UtilsChatChannel($channelname, $chatformat);
                 $usage = str_replace(['%gamename%', '%channelname%'], [$this->plugin->getAPI()->getGameCore()->getGameNameById($gameid), $channelname], self::USAGE['usage.chatchannel.create']);
                 $this->plugin->getLogger()->notice((new TextContainer($usage))->convertColor());
                 return true;
