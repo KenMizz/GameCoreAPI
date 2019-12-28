@@ -9,7 +9,6 @@
 #GameCoreAPI配置
 
 chatchannel: #聊天频道功能
-  enable: true #是否开启
   default-chatchannel: 'lobby' #默认聊天频道
   default-chatchannel-chatformat: '[player]: message' #默认聊天频道聊天格式
 
