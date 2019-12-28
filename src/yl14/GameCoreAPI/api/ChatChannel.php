@@ -12,13 +12,16 @@ class ChatChannel {
     private $plugin;
     
     private $channels = [];
+    private $defaultChatChannel = null;
 
     const USAGE = [
-        'usage.chatchannel.create' => 'GREEN小游戏 WHITE %gamename% GREEN创建聊天频道 WHITE %channelname% 成功'
+        'usage.chatchannel.create' => 'GREEN小游戏 WHITE %gamename% GREEN创建聊天频道 WHITE %channelname% 成功',
+        'usage.chatchannel.create' => 'GREEN小游戏 WHITE %gamename% GREEN移除聊天频道 WHITE %channelname% 成功'
     ];
 
-    public function __construct(GameCoreAPI $plugin) {
+    public function __construct(GameCoreAPI $plugin, string $defaultchatchannelname, string $defaultchatformat) {
         $this->plugin = $plugin;
+        $this->defaultChatChannel = new UtilsChatChannel($defaultchatchannelname, $defaultchatformat);
     }
 
     /**
@@ -53,5 +56,36 @@ class ChatChannel {
             return false;
         }
         return false;
+    }
+
+    public function remove(string $gameid, string $channelname) : bool {
+        $isIdValid = $this->plugin->getAPI()->getGameCore()->isIdValid($this->plugin, $gameid);
+        if($isIdValid) {
+            if(isset($this->channels[$gameid][$channelname])) {
+                $ChatChannel = $this->channels[$gameid][$channelname];
+                $ChatChannel->remove();
+                $usage = str_replace(['%gamename%', '%channelname%'], [$this->plugin->getAPI()->getGameCore()->getGameNameById($gameid), $channelname], self::USAGE['usage.chatchannel.remove']);
+                $this->plugin->getLogger()->notice((new TextContainer($usage))->convertColor());
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public function addPlayer(string $gameid, string $channelname, Array $players) : bool {
+        $isIdValid = $this->plugin->getAPI()->getGameCore()->isIdValid($this->plugin, $gameid);
+        if($isIdValid) {
+            if(isset($this->channels[$gameid][$channelname])) {
+                $ChatChannel = $this->channels[$gameid][$channelname];
+                foreach($players as $player) {
+                    
+                }
+            }
+        }
+    }
+
+    public function getDefaultChatChannel() : UtilsChatChannel {
+        return $this->defaultChatChannel;
     }
 }

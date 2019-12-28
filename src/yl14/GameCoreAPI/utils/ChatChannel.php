@@ -2,10 +2,11 @@
 
 namespace yl14\GameCoreAPI\utils;
 
+use yl14\GameCoreAPI\GameCoreAPI;
+
 class ChatChannel {
 
     private $channelname;
-
 
     private $players = [];
     private $mute = false;
@@ -16,7 +17,7 @@ class ChatChannel {
         $this->chatFormat = $chatFormat;
     }
 
-    public function addPlayer(CustomPlayer $player) {
+    public function addPlayer(CustomPlayer &$player) {
         if(!isset($this->players[$player->getPlayer()->getName()])) {
             $this->players[$player->getPlayer()->getName()] = $player;
         }
@@ -46,6 +47,12 @@ class ChatChannel {
     public function broadcastMessage(string $message) {
         foreach($this->players as $key => $value) {
             $value->getPlayer()->sendMessage($message);
+        }
+    }
+
+    public function remove() {
+        foreach($this->players as $key => $value) {
+            $value->getPlayer()->setChatChannel(GameCoreAPI::getInstance()->getAPI()->getChatChannel()->getDefaultChatChannel());
         }
     }
 }
