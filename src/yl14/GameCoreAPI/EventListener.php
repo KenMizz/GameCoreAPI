@@ -7,6 +7,7 @@ use pocketmine\event\{
 };
 
 use yl14\GameCoreAPI\utils\CustomPlayer;
+use yl14\GameCoreAPI\utils\InGamePlayerSession;
 
 class EventListener implements Listener {
 
@@ -17,15 +18,16 @@ class EventListener implements Listener {
     }
 
     public function onPlayerJoin(PlayerJoinEvent $ev) {
-        $this->plugin->addActivePlayer($this, new CustomPlayer($ev->getPlayer()));
+        InGamePlayerSession::addPlayer(new CustomPlayer($this->plugin, $ev->getPlayer()));
+        InGamePlayerSession::getPlayer($ev->getPlayer())->setChatChannel($this->plugin->getAPI()->getChatChannel()->getDefaultChatChannel());
     }
 
     public function onPlayerQuit(PlayerQuitEvent $ev) {
-        $this->plugin->removeActivePlayer($this, $ev->getPlayer());
+        InGamePlayerSession::removePlayer(new CustomPlayer($this->plugin, $ev->getPlayer()));
     }
 
     public function onPlayerChat(PlayerChatEvent $ev) {
         $ev->setCancelled();
-        $this->plugin->getActivePlayer($this, $ev->getPlayer())->getChatChannel()->sendMessage($this->plugin->getActivePlayer($this, $ev->getPlayer()), $ev->getMessage());
+        InGamePlayerSession::getPlayer($ev->getPlayer())->getChatChannel()->sendMessage(InGamePlayerSession::getPlayer($ev->getPlayer()), $ev->getMessage());
     }
 }

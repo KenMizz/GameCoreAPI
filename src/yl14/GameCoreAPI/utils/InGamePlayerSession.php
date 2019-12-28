@@ -24,7 +24,7 @@ class InGamePlayerSession {
         }
     }
 
-    static public function getPlayer(Player $player) {
+    static public function getPlayer(Player $player) : CustomPlayer{
         return self::$players[$player->getName()];   
     }
 
