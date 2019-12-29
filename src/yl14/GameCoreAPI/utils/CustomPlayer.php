@@ -28,7 +28,7 @@ class CustomPlayer {
         return $this->chatchannel;
     }
     
-    public function setChatChannel(ChatChannel $chatChannel) {
+    public function setChatChannel(ChatChannel &$chatChannel) {
         $this->chatchannel = $chatChannel;
         $this->plugin->getServer()->getPluginManager()->callEvent(new CustomPlayerUpdateEvent($this));
     }
