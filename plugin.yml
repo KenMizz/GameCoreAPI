@@ -4,4 +4,4 @@ author: 游乐14
 main: yl14\GameCoreAPI\GameCoreAPI
 load: STARTUP
 api:
-  - 3.11.1
+  - 3.11.5
