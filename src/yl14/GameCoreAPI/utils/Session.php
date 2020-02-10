@@ -1,10 +1,11 @@
 <?php
 
 namespace yl14\GameCoreAPI\utils;
+
+use pocketmine\plugin\Plugin;
 /**
  * Session是一个游戏房间的基类
- * 你在做游戏房间时可以继承这个类，并且通过GameCoreAPI管理
- * 在GameCoreAPI文件夹的config.yml内，Sessiong功能必须为开启，不然无法通过GameCoreAPI对其进行管理
+ * 你可以在做游戏房间时可以继承这个类，并且通过GameCoreAPI管理
  */
 
 class Session {

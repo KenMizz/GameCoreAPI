@@ -3,7 +3,9 @@
 namespace yl14\GameCoreAPI\api;
 
 use pocketmine\utils\TextFormat as TF;
+
 use yl14\GameCoreAPI\GameCoreAPI;
+use function yl14\GameCoreAPI\utils\generateENum;
 
 class GameCore {
 
@@ -26,7 +28,7 @@ class GameCore {
      */
     public function registerGame(string $name, array $author = []) : ?string {
         if(!isset($this->Games['name'])) {
-            $id = \yl14\GameCoreAPI\utils\utils::generateENum(15);
+            $id = generateENum(15);
             foreach($this->Games as $key => $value) {
                 if($value['id'] == $id) {
                     continue;
