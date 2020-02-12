@@ -22,11 +22,11 @@ class EventListener implements Listener {
     }
 
     public function onPlayerQuit(PlayerQuitEvent $ev) {
-        InGamePlayerSession::removePlayer(InGamePlayerSession::getPlayer($this->plugin, $ev->getPlayer()));
+        InGamePlayerSession::removePlayer(InGamePlayerSession::getPlayer($ev->getPlayer()));
     }
 
     public function onPlayerChat(PlayerChatEvent $ev) {
         $ev->setCancelled();
-        InGamePlayerSession::getPlayer($this->plugin, $ev->getPlayer())->getChatChannel()->sendMessage(InGamePlayerSession::getPlayer($this->plugin ,$ev->getPlayer()), $ev->getMessage());
+        InGamePlayerSession::getPlayer($ev->getPlayer())->getChatChannel()->sendMessage(InGamePlayerSession::getPlayer($ev->getPlayer()), $ev->getMessage());
     }
 }

@@ -22,7 +22,7 @@ class InGamePlayerSession {
         }
     }
 
-    static public function &getPlayer(GameCoreAPI $plugin, Player $player) {
+    static public function &getPlayer(Player $player) {
         return self::$players[$player->getName()] ?? false;
     }
 }
