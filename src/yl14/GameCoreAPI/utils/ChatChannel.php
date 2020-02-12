@@ -8,15 +8,15 @@ class ChatChannel {
 
     private $plugin;
 
-    private $channelId = null; /** @var Integer*/
+    private $channelName = null;
     private $players = []; /** @var \yl14\GameCoreAPI\utils\CustomPlayer */
 
     private $chatformat = "";
     private $isMute = false;
 
-    public function __construct(GameCoreAPI $plugin, int $channelId, string $chatformat = "") {
+    public function __construct(GameCoreAPI $plugin, string $channelName, string $chatformat = "") {
         $this->plugin = $plugin;
-        $this->channelId = $channelId;
+        $this->channelName = $channelName;
         $this->chatformat = $chatformat;
     }
 
@@ -33,10 +33,12 @@ class ChatChannel {
     }
 
     public function sendMessage(CustomPlayer $player, String $message) {
-        if($this->chatformat == "") {
-            $this->broadcastMessage('[' . $player->getPlayer()->getName() . ']' . $message);
-        } else {
-            $this->broadcastMessage(str_replace(['PLAYERNAME', 'MESSAGE'], [$player->getPlayer()->getName()], $message));
+        if(!$this->isMute) {
+            if($this->chatformat == "") {
+                $this->broadcastMessage('[' . $player->getPlayer()->getName() . ']' . $message);
+            } else {
+                $this->broadcastMessage(str_replace(['PLAYERNAME', 'MESSAGE'], [$player->getPlayer()->getName()], $message));
+            }
         }
     }
 
@@ -44,5 +46,9 @@ class ChatChannel {
         foreach($this->plugin->getServer()->getOnlinePlayers() as $player) {
             $player->sendMessage($message);
         }
+    }
+
+    public function setMute(bool $mute = false) {
+        $this->mute = $mute;
     }
 }
