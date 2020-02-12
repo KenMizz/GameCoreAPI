@@ -19,15 +19,14 @@ class EventListener implements Listener {
 
     public function onPlayerJoin(PlayerJoinEvent $ev) {
         InGamePlayerSession::addPlayer(new CustomPlayer($this->plugin, $ev->getPlayer()));
-        InGamePlayerSession::getPlayer($ev->getPlayer())->setChatChannel($this->plugin->getAPI()->getChatChannel()->getDefaultChatChannel());
     }
 
     public function onPlayerQuit(PlayerQuitEvent $ev) {
-        InGamePlayerSession::removePlayer(new CustomPlayer($this->plugin, $ev->getPlayer()));
+        InGamePlayerSession::removePlayer(InGamePlayerSession::getPlayer($this->plugin, $ev->getPlayer()));
     }
 
     public function onPlayerChat(PlayerChatEvent $ev) {
         $ev->setCancelled();
-        InGamePlayerSession::getPlayer($ev->getPlayer())->getChatChannel()->sendMessage(InGamePlayerSession::getPlayer($ev->getPlayer()), $ev->getMessage());
+        InGamePlayerSession::getPlayer($this->plugin, $ev->getPlayer())->getChatChannel()->sendMessage(InGamePlayerSession::getPlayer($this->plugin ,$ev->getPlayer()), $ev->getMessage());
     }
 }
