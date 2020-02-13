@@ -46,10 +46,12 @@ class GameCoreAPI extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->api = new API($this);
         @mkdir($this->getDataFolder());
+        /*
         if(!is_file($this->getDataFolder() . '/config.yml')) {
             $this->saveDefaultConfig();
         }
         $this->config = (new Config($this->getDataFolder() . '/config.yml', Config::YAML))->getAll();
+        */
         $this->getLogger()->notice(TF::GREEN . '初始化成功！当前版本: ' . TF::WHITE . $this->getDescription()->getVersion());
     }
 
