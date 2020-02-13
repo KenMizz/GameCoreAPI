@@ -5,6 +5,7 @@ namespace yl14\GameCoreAPI;
 use pocketmine\event\{
     Listener, player\PlayerJoinEvent, player\PlayerChatEvent, player\PlayerQuitEvent
 };
+use pocketmine\utils\TextFormat as TF;
 
 use yl14\GameCoreAPI\utils\CustomPlayer;
 use yl14\GameCoreAPI\utils\InGamePlayerSession;
@@ -27,6 +28,11 @@ class EventListener implements Listener {
 
     public function onPlayerChat(PlayerChatEvent $ev) {
         $ev->setCancelled();
-        InGamePlayerSession::getPlayer($ev->getPlayer())->getChatChannel()->sendMessage(InGamePlayerSession::getPlayer($ev->getPlayer()), $ev->getMessage());
+        $player = InGamePlayerSession::getPlayer($ev->getPlayer());
+        if(!is_null($player->getChatChannel())) {
+            $player->getChatChannel()->sendMessage($player, $ev->getMessage());
+        } else {
+            $ev->getPlayer()->sendMessage(TF::RED . '你当前没有加入任何的聊天频道');
+        }
     }
 }

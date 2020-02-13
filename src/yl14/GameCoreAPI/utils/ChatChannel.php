@@ -22,13 +22,21 @@ class ChatChannel {
 
     public function addPlayer(CustomPlayer $player) {
         if(!isset($this->players[$player->getPlayer()->getName()])) {
+            $player->setChatChannel($this);
             $this->players[$player->getPlayer()->getName()] = $player;
         }
     }
 
     public function removePlayer(CustomPlayer $player) {
         if(isset($this->players[$player->getPlayer()->getName()])) {
+            $player->setChatChannel(null);
             unset($this->players[$player->getPlayer()->getName()]);
+        }
+    }
+
+    public function removeAll() {
+        foreach($this->players as $player) {
+            $this->removePlayer($player);
         }
     }
 
