@@ -23,11 +23,11 @@ class CustomPlayer {
         return $this->player;
     }
     
-    public function setChatChannel(ChatChannel &$channel) {
+    public function setChatChannel(&$channel) {
         $this->chatChannel = $channel;
     }
 
-    public function &getChatChannel() : \yl14\GameCoreAPI\utils\ChatChannel {
+    public function &getChatChannel() : ?\yl14\GameCoreAPI\utils\ChatChannel {
         return $this->chatChannel;
-    } 
+    }
 }
