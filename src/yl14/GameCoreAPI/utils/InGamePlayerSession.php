@@ -11,7 +11,7 @@ class InGamePlayerSession {
     private static $players = [];
 
     static public function addPlayer(CustomPlayer $player) {
-        if(!isset($this->players[$player->getPlayer()->getName()])) {
+        if(!isset(self::$players[$player->getPlayer()->getName()])) {
             self::$players[$player->getPlayer()->getName()] = $player;
         }
     }
@@ -22,7 +22,7 @@ class InGamePlayerSession {
         }
     }
 
-    static public function &getPlayer(Player $player) : CustomPlayer{
+    static public function getPlayer(Player $player) : CustomPlayer{
         return self::$players[$player->getName()] ?? false;
     }
 }

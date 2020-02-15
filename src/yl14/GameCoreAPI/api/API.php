@@ -16,8 +16,7 @@ class API {
     public function __construct(GameCoreAPI $plugin) {
         $this->plugin = $plugin;
         $this->gamecore = new GameCore($this->plugin);
-        $configure = $this->plugin->getConfigure();
-        $this->chatchannel = new ChatChannel($this->plugin, $configure['default-chatchannel'], $configure['default-chatchannel-chatformat']);
+        $this->chatchannel = new ChatChannel($this->plugin);
     }
 
     public function getGameCore() : Gamecore {

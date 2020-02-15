@@ -54,8 +54,4 @@ class GameCoreAPI extends PluginBase {
         */
         $this->getLogger()->notice(TF::GREEN . '初始化成功！当前版本: ' . TF::WHITE . $this->getDescription()->getVersion());
     }
-
-    public function getConfigure() : Array {
-        return $this->config;
-    }
 }

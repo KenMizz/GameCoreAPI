@@ -37,10 +37,12 @@ class Tester extends PluginBase {
 
                 case 'ct':
                     GameCoreAPI::getInstance()->getAPI()->getChatChannel()->getChatChannel($this->gid, "ChannelTest")->addPlayer(InGamePlayerSession::getPlayer($sender));
+                    return true;
                 break;
 
                 case 'tt':
                     GameCoreAPI::getInstance()->getAPI()->getChatChannel()->getChatChannel($this->gid, "FormatTest")->addPlayer(InGamePlayerSession::getPlayer($sender));
+                    return true;
             }
         }
     }
