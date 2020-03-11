@@ -72,7 +72,7 @@ class ChatChannel {
      * 
      * @return \yl14\GameCoreAPI\utils\ChatChannel|Boolean
      */
-    public function &getChatChannel(string $gameId, string $channelname) {
+    public function getChatChannel(string $gameId, string $channelname) {
         $isIdValid = $this->plugin->getAPI()->getGameCore()->isIdValid($this->plugin, $gameId);
         if($isIdValid) {
             if(isset($this->channels[$gameId][$channelname])) {
