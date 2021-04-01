@@ -1,7 +1,7 @@
 # GameCoreAPI
 
-[中文](#中文)
-[English](#English)<br>
+[中文](#中文)<br>
+[English](#English)
 
 # 中文
 GameCoreAPI是一个Nukkit插件，用于帮助小游戏插件开发者以更简单的方式来开发
