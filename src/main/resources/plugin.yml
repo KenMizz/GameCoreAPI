@@ -1,0 +1,6 @@
+name: GameCoreAPI
+version: "1.0.0"
+author: 游乐12
+main: xyz.hjdmc.gamecoreapi.GameCoreAPI
+api: ["1.0.11"]
+load: STARTUP
