@@ -1,6 +1,0 @@
-name: GameCoreAPI
-author: 游乐13
-main: yl13\GameCoreAPI\GameCoreAPI
-version: 1.0.1
-api:
-  - 3.9.3
